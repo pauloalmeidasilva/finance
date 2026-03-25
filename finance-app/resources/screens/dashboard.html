@@ -1,0 +1,75 @@
+<!-- Dashboard Section -->
+<section id="dashboard" class="content-section active">
+    <header class="section-header">
+        <h1>Dashboard</h1>
+        <div class="date-display" id="currentDate">Carregando...</div>
+    </header>
+
+    <div class="summary-cards">
+        <div class="card glass">
+            <div class="card-icon income"><i class="ph ph-arrow-up"></i></div>
+            <div class="card-info">
+                <span class="card-label">Receita Total</span>
+                <h2 id="totalIncome">R$ 0,00</h2>
+            </div>
+        </div>
+        <div class="card glass">
+            <div class="card-icon expense"><i class="ph ph-arrow-down"></i></div>
+            <div class="card-info">
+                <span class="card-label">Despesa Total</span>
+                <h2 id="totalExpense">R$ 0,00</h2>
+            </div>
+        </div>
+        <div class="card glass">
+            <div class="card-icon investment"><i class="ph ph-piggy-bank"></i></div>
+            <div class="card-info">
+                <span class="card-label">Total Investido</span>
+                <h2 id="totalInvestment">R$ 0,00</h2>
+            </div>
+        </div>
+        <div class="card glass">
+            <div class="card-icon balance"><i class="ph ph-scales"></i></div>
+            <div class="card-info">
+                <span class="card-label">Saldo</span>
+                <h2 id="totalBalance">R$ 0,00</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="chart-container glass">
+            <h3>Evolução 6 Meses</h3>
+            <canvas id="mainChart"></canvas>
+        </div>
+        <div class="rule-container glass">
+            <h3>Regra 50-15-35</h3>
+            <div class="progress-group">
+                <div class="progress-info">
+                    <span>Essenciais (50%)</span>
+                    <span id="essentialsPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="essentialsBar" class="progress-fill primary" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="progress-group">
+                <div class="progress-info">
+                    <span>Investimentos (15%)</span>
+                    <span id="prioritiesPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="prioritiesBar" class="progress-fill success" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="progress-group">
+                <div class="progress-info">
+                    <span>Estilo de Vida (35%)</span>
+                    <span id="lifestylePercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="lifestyleBar" class="progress-fill warning" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
