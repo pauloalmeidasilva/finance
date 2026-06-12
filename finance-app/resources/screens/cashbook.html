@@ -1,0 +1,124 @@
+<!-- Cashbook Section -->
+<section id="cashbook" class="content-section">
+    <header class="section-header">
+        <div class="header-main">
+            <h1>Livro Caixa</h1>
+            <div class="cashbook-filters">
+                <select id="cashbookPeriodFilter" class="filter-select">
+                    <option value="current">Período Atual</option>
+                </select>
+                <select id="cashbookAccountFilter" class="filter-select">
+                    <option value="all">Todas as Contas</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn-primary" id="openCashbookModal"><i class="ph ph-plus"></i> Novo Registro</button>
+    </header>
+
+    <!-- Summary Cards -->
+    <div class="cashbook-summary">
+        <div class="summary-item glass">
+            <div class="summary-icon income"><i class="ph ph-arrow-up"></i></div>
+            <div>
+                <span class="summary-label">Entradas</span>
+                <h3 id="cashbookTotalIncome" class="summary-value">R$ 0,00</h3>
+            </div>
+        </div>
+        <div class="summary-item glass">
+            <div class="summary-icon expense"><i class="ph ph-arrow-down"></i></div>
+            <div>
+                <span class="summary-label">Saídas</span>
+                <h3 id="cashbookTotalExpense" class="summary-value">R$ 0,00</h3>
+            </div>
+        </div>
+        <div class="summary-item glass">
+            <div class="summary-icon balance"><i class="ph ph-equals"></i></div>
+            <div>
+                <span class="summary-label">Saldo do Período</span>
+                <h3 id="cashbookBalance" class="summary-value">R$ 0,00</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cashbook Table -->
+    <div class="table-container glass">
+        <table id="cashbookTable">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Conta</th>
+                    <th>Tipo</th>
+                    <th>Descrição</th>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                    <th>Saldo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Cashbook Entry Modal -->
+<div id="cashbookModal" class="modal">
+    <div class="modal-content glass">
+        <div class="modal-title-bar">
+            <h2 id="cashbookModalTitle">Novo Registro</h2>
+            <button class="icon-btn close-cashbook-modal"><i class="ph ph-x"></i></button>
+        </div>
+        <form id="cashbookForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cashbookType">Tipo</label>
+                    <select id="cashbookType" required>
+                        <option value="income">Entrada</option>
+                        <option value="expense">Saída</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cashbookValue">Valor (R$)</label>
+                    <input type="number" id="cashbookValue" step="0.01" min="0" required placeholder="0,00">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cashbookPeriod">Período</label>
+                    <select id="cashbookPeriod" required>
+                        <option value="">Selecione...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cashbookAccount">Conta</label>
+                    <select id="cashbookAccount" required>
+                        <option value="">Selecione...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cashbookDate">Data</label>
+                <input type="date" id="cashbookDate" required>
+            </div>
+            <div class="form-group">
+                <label for="cashbookDescription">Descrição</label>
+                <input type="text" id="cashbookDescription" placeholder="Ex: Salário, Compras, etc..." required>
+            </div>
+            <div class="form-group">
+                <label for="cashbookCategory">Categoria</label>
+                <select id="cashbookCategory" required>
+                    <option value="essentials">Essenciais</option>
+                    <option value="lifestyle">Estilo de Vida</option>
+                    <option value="other">Outros</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cashbookNotes">Anotações</label>
+                <textarea id="cashbookNotes" rows="3" placeholder="Observações gerais sobre este registro"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary close-cashbook-modal">Cancelar</button>
+                <button type="submit" class="btn-primary"><i class="ph ph-floppy-disk"></i> Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
