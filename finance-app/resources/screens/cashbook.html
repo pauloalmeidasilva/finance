@@ -10,35 +10,26 @@
                 <select id="cashbookAccountFilter" class="filter-select">
                     <option value="all">Todas as Contas</option>
                 </select>
+                <select id="cashbookTypeFilter" class="filter-select">
+                    <option value="all">Entradas e Saídas</option>
+                    <option value="income">Somente Entradas</option>
+                    <option value="expense">Somente Saídas</option>
+                </select>
+                <select id="cashbookCategoryFilter" class="filter-select">
+                    <option value="all">Todas as Categorias</option>
+                    <option value="essentials">Essenciais</option>
+                    <option value="lifestyle">Estilo de Vida</option>
+                    <option value="other">Outros</option>
+                </select>
             </div>
         </div>
-        <button class="btn-primary" id="openCashbookModal"><i class="ph ph-plus"></i> Novo Registro</button>
+        <div class="header-actions">
+            <button class="btn-secondary" id="printCashbookBtn" onclick="App.printCashbook()">
+                <i class="ph ph-printer"></i> Imprimir Relatório
+            </button>
+            <button class="btn-primary" id="openCashbookModal"><i class="ph ph-plus"></i> Novo Registro</button>
+        </div>
     </header>
-
-    <!-- Summary Cards -->
-    <div class="cashbook-summary">
-        <div class="summary-item glass">
-            <div class="summary-icon income"><i class="ph ph-arrow-up"></i></div>
-            <div>
-                <span class="summary-label">Entradas</span>
-                <h3 id="cashbookTotalIncome" class="summary-value">R$ 0,00</h3>
-            </div>
-        </div>
-        <div class="summary-item glass">
-            <div class="summary-icon expense"><i class="ph ph-arrow-down"></i></div>
-            <div>
-                <span class="summary-label">Saídas</span>
-                <h3 id="cashbookTotalExpense" class="summary-value">R$ 0,00</h3>
-            </div>
-        </div>
-        <div class="summary-item glass">
-            <div class="summary-icon balance"><i class="ph ph-equals"></i></div>
-            <div>
-                <span class="summary-label">Saldo do Período</span>
-                <h3 id="cashbookBalance" class="summary-value">R$ 0,00</h3>
-            </div>
-        </div>
-    </div>
 
     <!-- Cashbook Table -->
     <div class="table-container glass">
@@ -48,6 +39,7 @@
                     <th>Data</th>
                     <th>Conta</th>
                     <th>Tipo</th>
+                    <th>Categoria</th>
                     <th>Descrição</th>
                     <th>Entrada</th>
                     <th>Saída</th>
@@ -57,6 +49,23 @@
             </thead>
             <tbody></tbody>
         </table>
+    </div>
+
+    <!-- Summary Subtraction Card (Below Table) -->
+    <div class="cashbook-calc-card glass">
+        <div class="calc-row income">
+            <span class="calc-label"><i class="ph ph-plus-circle"></i> Receitas (Entradas)</span>
+            <span id="cashbookTotalIncome" class="calc-value income-val">R$ 0,00</span>
+        </div>
+        <div class="calc-row expense">
+            <span class="calc-label"><i class="ph ph-minus-circle"></i> Despesas (Saídas)</span>
+            <span id="cashbookTotalExpense" class="calc-value expense-val">R$ 0,00</span>
+        </div>
+        <div class="calc-divider"></div>
+        <div class="calc-row balance">
+            <span class="calc-label"><i class="ph ph-equals"></i> Saldo do Período</span>
+            <span id="cashbookBalance" class="calc-value balance-val">R$ 0,00</span>
+        </div>
     </div>
 </section>
 

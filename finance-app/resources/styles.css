@@ -517,8 +517,16 @@ tr:last-child td {
 .dashboard-filters,
 .cashbook-filters {
     display: flex;
-    gap: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     align-items: center;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
 }
 
 .filter-select {
@@ -697,32 +705,73 @@ textarea:focus {
     gap: 0.5rem;
 }
 
-/* ─── Cashbook ─── */
-.cashbook-summary {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+/* ─── Cashbook Subtraction Card ─── */
+.cashbook-calc-card {
+    max-width: 380px;
+    margin-left: auto;
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
-.summary-item {
+.calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+}
+
+.calc-label {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1.25rem;
-}
-
-.summary-label {
-    display: block;
-    font-size: 0.8rem;
+    gap: 0.5rem;
     color: var(--text-secondary);
-    margin-bottom: 0.25rem;
+    font-weight: 500;
 }
 
-.summary-value {
-    margin: 0;
-    font-size: 1.4rem;
+.calc-label i {
+    font-size: 1.15rem;
+}
+
+.calc-row.income .calc-label i { color: var(--success); }
+.calc-row.expense .calc-label i { color: var(--danger); }
+.calc-row.balance .calc-label i { color: var(--primary); }
+
+.calc-value {
     font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.calc-value.income-val {
+    color: var(--success);
+}
+
+.calc-value.expense-val {
+    color: var(--danger);
+}
+
+.calc-divider {
+    height: 2px;
+    background: var(--glass-border);
+    margin: 0.2rem 0;
+    border-radius: 1px;
+}
+
+.calc-row.balance {
+    font-size: 1.05rem;
+}
+
+.calc-row.balance .calc-label {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.calc-value.balance-val {
+    font-size: 1.3rem;
+    font-weight: 800;
 }
 
 #cashbookTable td.income-value {
@@ -792,7 +841,7 @@ textarea:focus {
 /* Accounts grid of cards */
 .accounts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
@@ -807,6 +856,7 @@ textarea:focus {
     border-radius: 16px;
     transition: var(--transition);
     cursor: default;
+    overflow: hidden;
 }
 
 .account-card:hover {
@@ -822,7 +872,6 @@ textarea:focus {
 /* Colored accent bar at the top */
 .account-accent {
     height: 4px;
-    border-radius: 2px;
     margin: -1.5rem -1.5rem 0;
     border-radius: 14px 14px 0 0;
 }
@@ -839,7 +888,7 @@ textarea:focus {
     display: flex;
     align-items: center;
     gap: 0.9rem;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
 }
 
 .account-card-icon {
@@ -894,20 +943,25 @@ textarea:focus {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: 10px;
-    padding: 1rem 1.25rem;
+    padding: 0.85rem 1.1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 0.5rem;
 }
 
 .account-card-balance-label {
     font-size: 0.8rem;
     color: var(--text-secondary);
+    white-space: nowrap;
 }
 
 .account-card-balance-value {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .account-card-balance-value.positive { color: var(--success); }
@@ -917,15 +971,18 @@ textarea:focus {
 /* Stats mini row */
 .account-card-stats {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4rem;
+    width: 100%;
 }
 
 .account-stat {
     flex: 1;
+    min-width: 0;
     background: var(--glass-bg);
     border-radius: 8px;
-    padding: 0.5rem 0.75rem;
+    padding: 0.45rem 0.35rem;
     text-align: center;
+    overflow: hidden;
 }
 
 .account-stat-label {
@@ -933,11 +990,18 @@ textarea:focus {
     font-size: 0.68rem;
     color: var(--text-secondary);
     margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .account-stat-value {
-    font-size: 0.85rem;
+    display: block;
+    font-size: 0.8rem;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .account-stat-value.income-color { color: var(--success); }
@@ -946,14 +1010,15 @@ textarea:focus {
 /* Action buttons row */
 .account-card-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4rem;
     padding-top: 0.25rem;
     border-top: 1px solid var(--glass-border);
 }
 
 .account-action-btn {
     flex: 1;
-    padding: 0.45rem 0.5rem;
+    min-width: 0;
+    padding: 0.45rem 0.4rem;
     border-radius: 6px;
     border: 1px solid var(--glass-border);
     background: transparent;
@@ -963,9 +1028,12 @@ textarea:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 4px;
     transition: var(--transition);
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .account-action-btn:hover { background: var(--glass-bg); color: var(--text-primary); }

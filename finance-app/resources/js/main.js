@@ -294,9 +294,15 @@ const App = {
         }
 
         // Modals
-        document.getElementById('openIncomeModal').onclick = () => this.toggleModal('incomeModal', true);
-        document.getElementById('openExpenseModal').onclick = () => this.toggleModal('expenseModal', true);
-        document.getElementById('openInvestmentModal').onclick = () => this.toggleModal('investmentModal', true);
+        const openIncomeModal = document.getElementById('openIncomeModal');
+        if (openIncomeModal) openIncomeModal.onclick = () => this.toggleModal('incomeModal', true);
+
+        const openExpenseModal = document.getElementById('openExpenseModal');
+        if (openExpenseModal) openExpenseModal.onclick = () => this.toggleModal('expenseModal', true);
+
+        const openInvestmentModal = document.getElementById('openInvestmentModal');
+        if (openInvestmentModal) openInvestmentModal.onclick = () => this.toggleModal('investmentModal', true);
+
         document.querySelectorAll('.close-modal').forEach(btn => {
             btn.onclick = () => {
                 this.toggleModal('incomeModal', false);
@@ -306,28 +312,40 @@ const App = {
         });
 
         // Forms
-        document.getElementById('incomeForm').onsubmit = async (e) => {
-            e.preventDefault();
-            await this.addIncome();
-            this.toggleModal('incomeModal', false);
-        };
+        const incomeForm = document.getElementById('incomeForm');
+        if (incomeForm) {
+            incomeForm.onsubmit = async (e) => {
+                e.preventDefault();
+                await this.addIncome();
+                this.toggleModal('incomeModal', false);
+            };
+        }
 
-        document.getElementById('expenseForm').onsubmit = async (e) => {
-            e.preventDefault();
-            await this.addExpense();
-            this.toggleModal('expenseModal', false);
-        };
+        const expenseForm = document.getElementById('expenseForm');
+        if (expenseForm) {
+            expenseForm.onsubmit = async (e) => {
+                e.preventDefault();
+                await this.addExpense();
+                this.toggleModal('expenseModal', false);
+            };
+        }
 
-        document.getElementById('investmentForm').onsubmit = async (e) => {
-            e.preventDefault();
-            await this.addInvestment();
-            this.toggleModal('investmentModal', false);
-        };
+        const investmentForm = document.getElementById('investmentForm');
+        if (investmentForm) {
+            investmentForm.onsubmit = async (e) => {
+                e.preventDefault();
+                await this.addInvestment();
+                this.toggleModal('investmentModal', false);
+            };
+        }
 
         // Account modal open
-        document.getElementById('openAccountModal').addEventListener('click', () => {
-            this.openAddAccountModal();
-        });
+        const openAccountModal = document.getElementById('openAccountModal');
+        if (openAccountModal) {
+            openAccountModal.addEventListener('click', () => {
+                this.openAddAccountModal();
+            });
+        }
 
         // Account modal close (using class close-account-modal to avoid conflict)
         document.querySelectorAll('.close-account-modal').forEach(btn => {
@@ -337,10 +355,13 @@ const App = {
         });
 
         // Account form submit
-        document.getElementById('accountForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await this.saveAccountFromForm();
-        });
+        const accountForm = document.getElementById('accountForm');
+        if (accountForm) {
+            accountForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await this.saveAccountFromForm();
+            });
+        }
 
         // Periods events
         const openPeriodBtn = document.getElementById('openPeriodModal');
@@ -407,6 +428,16 @@ const App = {
             cashAccountFilter.addEventListener('change', () => this.renderCashbook());
         }
 
+        const cashTypeFilter = document.getElementById('cashbookTypeFilter');
+        if (cashTypeFilter) {
+            cashTypeFilter.addEventListener('change', () => this.renderCashbook());
+        }
+
+        const cashCategoryFilter = document.getElementById('cashbookCategoryFilter');
+        if (cashCategoryFilter) {
+            cashCategoryFilter.addEventListener('change', () => this.renderCashbook());
+        }
+
         // Neutralino events
         Neutralino.events.on("windowClose", () => Neutralino.app.exit());
     },
@@ -442,101 +473,170 @@ const App = {
         return this.data.accounts[this.data.currentAccount];
     },
 
+    getAccountIncomes(account) {
+        if (!account) return [];
+        if (account.incomes && Array.isArray(account.incomes)) return account.incomes;
+        return (account.entries || []).filter(e => e.type === 'income');
+    },
+
+    getAccountExpenses(account) {
+        if (!account) return [];
+        if (account.expenses && Array.isArray(account.expenses)) return account.expenses;
+        return (account.entries || []).filter(e => e.type === 'expense');
+    },
+
+    getAccountInvestments(account) {
+        if (!account) return [];
+        return account.investments || [];
+    },
+
     async addIncome() {
         const account = this.getCurrentAccount();
-        const income = {
-            id: Date.now(),
-            value: parseFloat(document.getElementById('incomeValue').value),
-            type: document.getElementById('incomeType').value,
-            member: document.getElementById('incomeMember').value,
-            date: new Date().toISOString()
-        };
+        if (!account) return;
+        
+        if (!account.incomes && account.entries) {
+            account.entries.push({
+                id: Date.now(),
+                type: 'income',
+                value: parseFloat(document.getElementById('incomeValue').value) || 0,
+                description: document.getElementById('incomeType').value,
+                category: 'other',
+                notes: document.getElementById('incomeMember').value,
+                periodId: this.data.currentPeriod || 'current',
+                date: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            });
+        } else {
+            if (!account.incomes) account.incomes = [];
+            account.incomes.push({
+                id: Date.now(),
+                value: parseFloat(document.getElementById('incomeValue').value) || 0,
+                type: document.getElementById('incomeType').value,
+                member: document.getElementById('incomeMember').value,
+                date: new Date().toISOString()
+            });
+        }
 
-        account.incomes.push(income);
         await StorageManager.save(this.data);
         this.updateUI();
-        document.getElementById('incomeForm').reset();
+        const form = document.getElementById('incomeForm');
+        if (form) form.reset();
     },
 
     async addExpense() {
         const account = this.getCurrentAccount();
-        const expense = {
-            id: Date.now(),
-            value: parseFloat(document.getElementById('expenseValue').value),
-            type: document.getElementById('expenseType').value,
-            location: document.getElementById('expenseLocation').value,
-            member: document.getElementById('expenseMember').value,
-            category: document.getElementById('expenseCategory').value,
-            date: new Date().toISOString()
-        };
+        if (!account) return;
 
-        account.expenses.push(expense);
+        if (!account.expenses && account.entries) {
+            account.entries.push({
+                id: Date.now(),
+                type: 'expense',
+                value: parseFloat(document.getElementById('expenseValue').value) || 0,
+                description: document.getElementById('expenseType').value,
+                category: document.getElementById('expenseCategory').value || 'other',
+                notes: `${document.getElementById('expenseMember').value} @ ${document.getElementById('expenseLocation').value}`,
+                periodId: this.data.currentPeriod || 'current',
+                date: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            });
+        } else {
+            if (!account.expenses) account.expenses = [];
+            account.expenses.push({
+                id: Date.now(),
+                value: parseFloat(document.getElementById('expenseValue').value) || 0,
+                type: document.getElementById('expenseType').value,
+                location: document.getElementById('expenseLocation').value,
+                member: document.getElementById('expenseMember').value,
+                category: document.getElementById('expenseCategory').value,
+                date: new Date().toISOString()
+            });
+        }
+
         await StorageManager.save(this.data);
         this.updateUI();
-        document.getElementById('expenseForm').reset();
+        const form = document.getElementById('expenseForm');
+        if (form) form.reset();
     },
 
     async addInvestment() {
         const account = this.getCurrentAccount();
-        const investment = {
+        if (!account) return;
+
+        if (!account.investments) account.investments = [];
+        account.investments.push({
             id: Date.now(),
-            value: parseFloat(document.getElementById('investmentValue').value),
+            value: parseFloat(document.getElementById('investmentValue').value) || 0,
             type: document.getElementById('investmentType').value,
             member: document.getElementById('investmentMember').value,
             date: new Date().toISOString()
-        };
+        });
 
-        account.investments.push(investment);
         await StorageManager.save(this.data);
         this.updateUI();
-        document.getElementById('investmentForm').reset();
+        const form = document.getElementById('investmentForm');
+        if (form) form.reset();
     },
 
     async deleteItem(type, id) {
         const account = this.getCurrentAccount();
-        if (type === 'income') {
-            account.incomes = account.incomes.filter(i => i.id !== id);
-        } else if (type === 'expense') {
-            account.expenses = account.expenses.filter(e => e.id !== id);
-        } else if (type === 'investment') {
-            account.investments = account.investments.filter(inv => inv.id !== id);
+        if (!account) return;
+
+        if (account.entries) {
+            account.entries = account.entries.filter(e => e.id != id);
+        }
+        if (account.incomes) {
+            account.incomes = account.incomes.filter(i => i.id != id);
+        }
+        if (account.expenses) {
+            account.expenses = account.expenses.filter(e => e.id != id);
+        }
+        if (account.investments) {
+            account.investments = account.investments.filter(inv => inv.id != id);
         }
         await StorageManager.save(this.data);
         this.updateUI();
     },
 
     updateUI() {
-        // Get current account for display
-        const account = this.getCurrentAccount();
+        const account = this.getCurrentAccount() || {};
         
-        // Calculate global totals (across all accounts for the rule)
+        // Calculate global totals across all accounts
         let globalTotalIncome = 0;
         let globalTotalExpense = 0;
         let globalTotalInvestment = 0;
         
-        for (const acc of Object.values(this.data.accounts)) {
-            globalTotalIncome += acc.incomes.reduce((acc, curr) => acc + curr.value, 0);
-            globalTotalExpense += acc.expenses.reduce((acc, curr) => acc + curr.value, 0);
-            globalTotalInvestment += acc.investments.reduce((acc, curr) => acc + curr.value, 0);
+        for (const acc of Object.values(this.data.accounts || {})) {
+            const incs = this.getAccountIncomes(acc);
+            const exps = this.getAccountExpenses(acc);
+            const invs = this.getAccountInvestments(acc);
+            
+            globalTotalIncome += incs.reduce((s, curr) => s + (curr.value || 0), 0);
+            globalTotalExpense += exps.reduce((s, curr) => s + (curr.value || 0), 0);
+            globalTotalInvestment += invs.reduce((s, curr) => s + (curr.value || 0), 0);
         }
         
         // Calculate account-specific totals for display
-        const totalIncome = account.incomes.reduce((acc, curr) => acc + curr.value, 0);
-        const totalExpense = account.expenses.reduce((acc, curr) => acc + curr.value, 0);
-        const totalInvestment = account.investments.reduce((acc, curr) => acc + curr.value, 0);
+        const accIncomes = this.getAccountIncomes(account);
+        const accExpenses = this.getAccountExpenses(account);
+        const accInvestments = this.getAccountInvestments(account);
+
+        const totalIncome = accIncomes.reduce((s, curr) => s + (curr.value || 0), 0);
+        const totalExpense = accExpenses.reduce((s, curr) => s + (curr.value || 0), 0);
+        const totalInvestment = accInvestments.reduce((s, curr) => s + (curr.value || 0), 0);
         const balance = totalIncome - totalExpense - totalInvestment;
 
         // Update cards (display current account totals)
-        document.getElementById('totalIncome').textContent = this.formatCurrency(totalIncome);
-        document.getElementById('totalExpense').textContent = this.formatCurrency(totalExpense);
-        document.getElementById('totalInvestment').textContent = this.formatCurrency(totalInvestment);
-        document.getElementById('totalBalance').textContent = this.formatCurrency(balance);
-        document.getElementById('totalBalance').style.color = balance >= 0 ? 'var(--success)' : 'var(--danger)';
+        this.setText('totalIncome', this.formatCurrency(totalIncome));
+        this.setText('totalExpense', this.formatCurrency(totalExpense));
+        this.setText('totalInvestment', this.formatCurrency(totalInvestment));
+        this.setText('totalBalance', this.formatCurrency(balance));
+        const totalBalEl = document.getElementById('totalBalance');
+        if (totalBalEl) totalBalEl.style.color = balance >= 0 ? 'var(--success)' : 'var(--danger)';
 
         // Update Section Totals
-        document.getElementById('sectionTotalIncome').textContent = this.formatCurrency(totalIncome);
-        document.getElementById('sectionTotalExpense').textContent = this.formatCurrency(totalExpense);
-        document.getElementById('sectionTotalInvestment').textContent = this.formatCurrency(totalInvestment);
+        this.setText('sectionTotalIncome', this.formatCurrency(totalIncome));
+        this.setText('sectionTotalExpense', this.formatCurrency(totalExpense));
+        this.setText('sectionTotalInvestment', this.formatCurrency(totalInvestment));
 
         // Update 50-15-35 Rule (GLOBAL - using all accounts)
         this.updateRule(globalTotalIncome, globalTotalInvestment);
@@ -549,17 +649,17 @@ const App = {
     },
 
     updateRule(totalIncome, currentInvestments) {
-        // Calculate essentials and lifestyle from ALL accounts
         let essentials = 0;
         let lifestyle = 0;
         
-        for (const account of Object.values(this.data.accounts)) {
-            essentials += account.expenses
+        for (const account of Object.values(this.data.accounts || {})) {
+            const exps = this.getAccountExpenses(account);
+            essentials += exps
                 .filter(e => e.category === 'essentials')
-                .reduce((acc, curr) => acc + curr.value, 0);
-            lifestyle += account.expenses
+                .reduce((s, curr) => s + (curr.value || 0), 0);
+            lifestyle += exps
                 .filter(e => e.category === 'lifestyle')
-                .reduce((acc, curr) => acc + curr.value, 0);
+                .reduce((s, curr) => s + (curr.value || 0), 0);
         }
 
         const updateBar = (id, percentId, value, targetPercent) => {
@@ -568,13 +668,15 @@ const App = {
             const bar = document.getElementById(id);
             const label = document.getElementById(percentId);
             
-            bar.style.width = `${Math.min(progressPercent, 100)}%`;
-            label.textContent = `${progressPercent.toFixed(1)}%`;
+            if (bar) bar.style.width = `${Math.min(progressPercent, 100)}%`;
+            if (label) label.textContent = `${progressPercent.toFixed(1)}%`;
             
-            if (progressPercent > 100) {
-                bar.style.backgroundColor = 'var(--danger)';
-            } else {
-                bar.style.backgroundColor = ''; 
+            if (bar) {
+                if (progressPercent > 100) {
+                    bar.style.backgroundColor = 'var(--danger)';
+                } else {
+                    bar.style.backgroundColor = ''; 
+                }
             }
         };
 
@@ -585,47 +687,57 @@ const App = {
 
     calculateCategoryTotal(category) {
         const account = this.getCurrentAccount();
-        return account.expenses
+        const exps = this.getAccountExpenses(account);
+        return exps
             .filter(e => e.category === category)
-            .reduce((acc, curr) => acc + curr.value, 0);
+            .reduce((s, curr) => s + (curr.value || 0), 0);
     },
 
     renderTables() {
         const account = this.getCurrentAccount();
+        const incomes = this.getAccountIncomes(account);
+        const expenses = this.getAccountExpenses(account);
+        const investments = this.getAccountInvestments(account);
         
         const incomeBody = document.querySelector('#incomeTable tbody');
-        incomeBody.innerHTML = account.incomes.map(i => `
-            <tr>
-                <td>${i.member}</td>
-                <td>${i.type}</td>
-                <td>${this.formatCurrency(i.value)}</td>
-                <td>${new Date(i.date).toLocaleDateString('pt-br')}</td>
-                <td><button class="action-btn" onclick="App.deleteItem('income', ${i.id})"><i class="ph ph-trash"></i></button></td>
-            </tr>
-        `).join('');
+        if (incomeBody) {
+            incomeBody.innerHTML = incomes.map(i => `
+                <tr>
+                    <td>${i.member || i.notes || '-'}</td>
+                    <td>${i.type || i.description || '-'}</td>
+                    <td>${this.formatCurrency(i.value || 0)}</td>
+                    <td>${i.date ? new Date(i.date).toLocaleDateString('pt-br') : '-'}</td>
+                    <td><button class="action-btn" onclick="App.deleteItem('income', ${i.id})"><i class="ph ph-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
 
         const expenseBody = document.querySelector('#expenseTable tbody');
-        expenseBody.innerHTML = account.expenses.map(e => `
-            <tr>
-                <td>${e.member}</td>
-                <td>${e.type} @ ${e.location}</td>
-                <td>${this.translateCategory(e.category)}</td>
-                <td>${this.formatCurrency(e.value)}</td>
-                <td>${new Date(e.date).toLocaleDateString('pt-br')}</td>
-                <td><button class="action-btn" onclick="App.deleteItem('expense', ${e.id})"><i class="ph ph-trash"></i></button></td>
-            </tr>
-        `).join('');
+        if (expenseBody) {
+            expenseBody.innerHTML = expenses.map(e => `
+                <tr>
+                    <td>${e.member || e.notes || '-'}</td>
+                    <td>${e.type || e.description || '-'}${e.location ? ' @ ' + e.location : ''}</td>
+                    <td>${this.translateCategory(e.category)}</td>
+                    <td>${this.formatCurrency(e.value || 0)}</td>
+                    <td>${e.date ? new Date(e.date).toLocaleDateString('pt-br') : '-'}</td>
+                    <td><button class="action-btn" onclick="App.deleteItem('expense', ${e.id})"><i class="ph ph-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
 
         const investmentBody = document.querySelector('#investmentTable tbody');
-        investmentBody.innerHTML = account.investments.map(inv => `
-            <tr>
-                <td>${inv.member}</td>
-                <td>${inv.type}</td>
-                <td>${this.formatCurrency(inv.value)}</td>
-                <td>${new Date(inv.date).toLocaleDateString('pt-br')}</td>
-                <td><button class="action-btn" onclick="App.deleteItem('investment', ${inv.id})"><i class="ph ph-trash"></i></button></td>
-            </tr>
-        `).join('');
+        if (investmentBody) {
+            investmentBody.innerHTML = investments.map(inv => `
+                <tr>
+                    <td>${inv.member || '-'}</td>
+                    <td>${inv.type || '-'}</td>
+                    <td>${this.formatCurrency(inv.value || 0)}</td>
+                    <td>${inv.date ? new Date(inv.date).toLocaleDateString('pt-br') : '-'}</td>
+                    <td><button class="action-btn" onclick="App.deleteItem('investment', ${inv.id})"><i class="ph ph-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
     },
 
     initChart() {
@@ -732,6 +844,13 @@ const App = {
         this.chart.update();
     },
 
+    setText(id, text) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.textContent = text;
+        }
+    },
+
     formatCurrency(value) {
         return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
     },
@@ -759,29 +878,48 @@ const App = {
 
     // Period Management Methods
     getCurrentPeriod() {
-        return this.data.periods.find(p => p.id === this.data.currentPeriod);
+        return (this.data.periods || []).find(p => p.id === this.data.currentPeriod);
+    },
+
+    async activatePeriod(periodId) {
+        if (!this.data.periods) return;
+
+        this.data.periods.forEach(p => {
+            if (p.id === periodId) {
+                p.isOpen = true;
+                p.endDate = null;
+            } else {
+                p.isOpen = false;
+                if (!p.endDate) {
+                    p.endDate = new Date().toISOString().split('T')[0];
+                }
+            }
+        });
+
+        this.data.currentPeriod = periodId;
+
+        await StorageManager.save(this.data);
+        this.renderPeriodsSection();
+        this.updateUI();
     },
 
     async openPeriod(name, startDate) {
-        // Close current period if open
-        const current = this.getCurrentPeriod();
-        if (current && current.isOpen) {
-            current.isOpen = false;
-            current.endDate = new Date().toISOString().split('T')[0];
-        }
+        if (!this.data.periods) this.data.periods = [];
+        const isFirstPeriod = this.data.periods.length === 0;
 
-        // Create new period
         const newPeriod = {
             id: `period_${Date.now()}`,
             name: name,
             startDate: startDate,
             endDate: null,
-            isOpen: true,
+            isOpen: isFirstPeriod,
             createdAt: new Date().toISOString()
         };
 
         this.data.periods.push(newPeriod);
-        this.data.currentPeriod = newPeriod.id;
+        if (isFirstPeriod) {
+            this.data.currentPeriod = newPeriod.id;
+        }
 
         await StorageManager.save(this.data);
         this.updateUI();
@@ -812,9 +950,9 @@ const App = {
         };
 
         return {
-            incomes: account.incomes.filter(filterByPeriod),
-            expenses: account.expenses.filter(filterByPeriod),
-            investments: account.investments.filter(filterByPeriod)
+            incomes: this.getAccountIncomes(account).filter(filterByPeriod),
+            expenses: this.getAccountExpenses(account).filter(filterByPeriod),
+            investments: this.getAccountInvestments(account).filter(filterByPeriod)
         };
     },
 
@@ -888,9 +1026,10 @@ const App = {
 
     buildAccountCard(account) {
         const balance  = this.calculateAccountBalance(account.id);
-        const entries  = account.entries || [];
-        const income   = entries.filter(e => e.type === 'income').reduce((s, e) => s + e.value, 0);
-        const expense  = entries.filter(e => e.type === 'expense').reduce((s, e) => s + e.value, 0);
+        const incomes  = this.getAccountIncomes(account);
+        const expenses = this.getAccountExpenses(account);
+        const income   = incomes.reduce((s, e) => s + (e.value || 0), 0);
+        const expense  = expenses.reduce((s, e) => s + (e.value || 0), 0);
         const color    = account.color || 'indigo';
         const isActive = account.isActive !== false;
         const balanceClass   = balance > 0 ? 'positive' : balance < 0 ? 'negative' : 'zero';
@@ -900,7 +1039,7 @@ const App = {
         const toggleClass    = isActive ? 'btn-toggle-active' : 'btn-toggle-inactive';
         const toggleIcon     = isActive ? 'ph-eye-slash' : 'ph-eye';
         const toggleLabel    = isActive ? 'Desativar' : 'Ativar';
-        const totalEntries   = entries.length + (account.investments?.length || 0);
+        const totalEntries   = incomes.length + expenses.length + (account.investments?.length || 0);
 
         return `<div class="account-card glass${inactiveClass}">
             <div class="account-accent accent-${color}"></div>
@@ -1127,11 +1266,11 @@ const App = {
     buildPeriodCard(period) {
         const isOpen = period.isOpen;
         const badgeClass = isOpen ? 'badge-period-open' : 'badge-period-closed';
-        const badgeText = isOpen ? '<i class="ph ph-lock-open"></i> Aberto' : '<i class="ph ph-lock"></i> Encerrado';
+        const badgeText = isOpen ? '<i class="ph ph-lock-open"></i> Ativo' : '<i class="ph ph-lock"></i> Inativo';
         const cardClass = isOpen ? 'period-open' : 'period-closed';
 
         const startDate = new Date(period.startDate).toLocaleDateString('pt-br');
-        const endDate = period.endDate ? new Date(period.endDate).toLocaleDateString('pt-br') : 'Em aberto';
+        const endDate = period.endDate ? new Date(period.endDate).toLocaleDateString('pt-br') : (isOpen ? 'Em aberto' : '-');
 
         // Count entries in this period
         let entriesCount = 0;
@@ -1139,12 +1278,11 @@ const App = {
         let expenseTotal = 0;
 
         for (const account of this.getAccounts()) {
-            if (account.entries) {
-                const periodEntries = account.entries.filter(e => e.periodId === period.id);
-                entriesCount += periodEntries.length;
-                incomeTotal += periodEntries.filter(e => e.type === 'income').reduce((s, e) => s + e.value, 0);
-                expenseTotal += periodEntries.filter(e => e.type === 'expense').reduce((s, e) => s + e.value, 0);
-            }
+            const entries = account.entries || [];
+            const periodEntries = entries.filter(e => e.periodId === period.id);
+            entriesCount += periodEntries.length;
+            incomeTotal += periodEntries.filter(e => e.type === 'income').reduce((s, e) => s + (e.value || 0), 0);
+            expenseTotal += periodEntries.filter(e => e.type === 'expense').reduce((s, e) => s + (e.value || 0), 0);
         }
 
         const balance = incomeTotal - expenseTotal;
@@ -1171,9 +1309,12 @@ const App = {
                 </div>
             </div>
             <div class="period-card-actions">
-                ${!isOpen ? `<button class="btn-secondary btn-sm" onclick="App.promptDeletePeriod('${period.id}')">
+                ${!isOpen ? `<button class="btn-primary btn-sm" onclick="App.activatePeriod('${period.id}')">
+                    <i class="ph ph-check-circle"></i> Ativar
+                </button>
+                <button class="btn-secondary btn-sm" onclick="App.promptDeletePeriod('${period.id}')">
                     <i class="ph ph-trash"></i> Deletar
-                </button>` : ''}
+                </button>` : `<span class="period-badge badge-period-open" style="padding: 6px 12px;"><i class="ph ph-check-circle"></i> Período Ativo</span>`}
             </div>
         </div>`;
     },
@@ -1192,12 +1333,8 @@ const App = {
 
         if (!name || !startDate) return;
 
-        // Close current period if open
-        const current = this.getCurrentPeriod();
-        if (current && current.isOpen) {
-            current.isOpen = false;
-            current.endDate = new Date().toISOString().split('T')[0];
-        }
+        if (!this.data.periods) this.data.periods = [];
+        const isFirstPeriod = this.data.periods.length === 0;
 
         // Create new period
         const newPeriod = {
@@ -1206,17 +1343,20 @@ const App = {
             description,
             startDate,
             endDate: null,
-            isOpen: true,
+            isOpen: isFirstPeriod,
             closeDescription: '',
             createdAt: new Date().toISOString()
         };
 
         this.data.periods.push(newPeriod);
-        this.data.currentPeriod = newPeriod.id;
+        if (isFirstPeriod) {
+            this.data.currentPeriod = newPeriod.id;
+        }
 
         await StorageManager.save(this.data);
         this.toggleModal('periodModal', false);
         this.renderPeriodsSection();
+        this.updateUI();
     },
 
     openClosePeriodModal() {
@@ -1295,10 +1435,19 @@ const App = {
 
     // ─── Cashbook (Livro Caixa) ────────────────────────────────────────────────────────
     renderCashbook() {
-        const periodFilter = document.getElementById('cashbookPeriodFilter')?.value || 'current';
-        const accountFilter = document.getElementById('cashbookAccountFilter')?.value || 'all';
+        const periodFilter   = document.getElementById('cashbookPeriodFilter')?.value  || 'current';
+        const accountFilter  = document.getElementById('cashbookAccountFilter')?.value || 'all';
+        const typeFilter     = document.getElementById('cashbookTypeFilter')?.value    || 'all';
+        const categoryFilter = document.getElementById('cashbookCategoryFilter')?.value || 'all';
 
-        // Get accounts to display
+        // Mapa de categorias legível
+        const categoryNames = {
+            essentials: 'Essenciais',
+            lifestyle:  'Estilo de Vida',
+            other:      'Outros'
+        };
+
+        // Filtrar contas
         let accounts = [];
         if (accountFilter === 'all') {
             accounts = this.getAccounts();
@@ -1307,7 +1456,7 @@ const App = {
             if (account) accounts = [account];
         }
 
-        // Get entries from selected period
+        // Coletar lançamentos do período
         let entries = [];
         for (const account of accounts) {
             if (account.entries) {
@@ -1318,11 +1467,21 @@ const App = {
             }
         }
 
-        // Sort by date (oldest first)
+        // Aplicar filtro de tipo
+        if (typeFilter !== 'all') {
+            entries = entries.filter(e => e.type === typeFilter);
+        }
+
+        // Aplicar filtro de categoria
+        if (categoryFilter !== 'all') {
+            entries = entries.filter(e => e.category === categoryFilter);
+        }
+
+        // Ordenar por data (mais antigo primeiro)
         entries.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        // Calculate totals and running balance
-        let totalIncome = 0;
+        // Calcular totais e saldo acumulado
+        let totalIncome  = 0;
         let totalExpense = 0;
         let runningBalance = 0;
 
@@ -1330,18 +1489,19 @@ const App = {
         if (!tbody) return;
 
         if (entries.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-secondary);">Nenhum registro encontrado</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 2rem; color: var(--text-secondary);">Nenhum registro encontrado</td></tr>';
         } else {
             tbody.innerHTML = entries.map(entry => {
-                const date = new Date(entry.date).toLocaleDateString('pt-br');
+                const date     = new Date(entry.date).toLocaleDateString('pt-br');
                 const isIncome = entry.type === 'income';
-                const value = entry.value;
+                const value    = entry.value;
+                const catLabel = categoryNames[entry.category] || entry.category || '-';
 
                 if (isIncome) {
-                    totalIncome += value;
+                    totalIncome    += value;
                     runningBalance += value;
                 } else {
-                    totalExpense += value;
+                    totalExpense   += value;
                     runningBalance -= value;
                 }
 
@@ -1351,6 +1511,7 @@ const App = {
                     <td>${date}</td>
                     <td>${entry.accountName}</td>
                     <td>${isIncome ? '<span class="badge" style="background: rgba(16,185,129,0.15); color: var(--success);">Entrada</span>' : '<span class="badge" style="background: rgba(239,68,68,0.15); color: var(--danger);">Saída</span>'}</td>
+                    <td>${catLabel}</td>
                     <td>${entry.description}</td>
                     <td class="income-value">${isIncome ? this.formatCurrency(value) : '-'}</td>
                     <td class="expense-value">${!isIncome ? this.formatCurrency(value) : '-'}</td>
@@ -1364,14 +1525,237 @@ const App = {
             }).join('');
         }
 
-        // Update summary
+        // Atualizar card de resumo
         const balance = totalIncome - totalExpense;
-        this.setText('cashbookTotalIncome', this.formatCurrency(totalIncome));
-        this.setText('cashbookTotalExpense', this.formatCurrency(totalExpense));
+        this.setText('cashbookTotalIncome',  `+ ${this.formatCurrency(totalIncome)}`);
+        this.setText('cashbookTotalExpense', `- ${this.formatCurrency(totalExpense)}`);
         this.setText('cashbookBalance', this.formatCurrency(balance));
 
-        // Populate filter selects
+        const balanceValEl = document.getElementById('cashbookBalance');
+        if (balanceValEl) {
+            balanceValEl.style.color = balance >= 0 ? 'var(--success)' : 'var(--danger)';
+        }
+
+        // Atualizar selects de filtro
         this.populateCashbookFilters();
+    },
+
+    printCashbook() {
+        // Coletar valores de filtro atuais para o relatório
+        const periodFilter   = document.getElementById('cashbookPeriodFilter');
+        const accountFilter  = document.getElementById('cashbookAccountFilter');
+        const typeFilter     = document.getElementById('cashbookTypeFilter');
+        const categoryFilter = document.getElementById('cashbookCategoryFilter');
+
+        const periodLabel   = periodFilter?.options[periodFilter.selectedIndex]?.text   || 'Todos';
+        const accountLabel  = accountFilter?.options[accountFilter.selectedIndex]?.text || 'Todas';
+        const typeLabel     = typeFilter?.options[typeFilter.selectedIndex]?.text       || 'Todos';
+        const categoryLabel = categoryFilter?.options[categoryFilter.selectedIndex]?.text || 'Todas';
+
+        // Obter HTML da tabela
+        const table = document.getElementById('cashbookTable');
+        if (!table) return;
+
+        // Clonar tabela e remover a coluna "Ações"
+        const tableClone = table.cloneNode(true);
+        tableClone.querySelectorAll('th:last-child, td:last-child').forEach(el => el.remove());
+
+        // Pegar valores do card de resumo
+        const totalIncome  = document.getElementById('cashbookTotalIncome')?.textContent  || 'R$ 0,00';
+        const totalExpense = document.getElementById('cashbookTotalExpense')?.textContent || 'R$ 0,00';
+        const balance      = document.getElementById('cashbookBalance')?.textContent      || 'R$ 0,00';
+        const balanceColor = document.getElementById('cashbookBalance')?.style.color      || 'inherit';
+
+        const printWindow = window.open('', '_blank', 'width=900,height=700');
+        printWindow.document.write(`<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório – Livro Caixa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 13px;
+            color: #1a1a2e;
+            padding: 32px 40px;
+            background: #fff;
+        }
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .report-title h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .report-title p {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        .report-logo {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            text-align: right;
+        }
+        .filters-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 24px;
+            margin-bottom: 20px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+        .filter-tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+        .filter-tag .label {
+            color: #64748b;
+            font-weight: 500;
+        }
+        .filter-tag .value {
+            color: #0f172a;
+            font-weight: 700;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+        thead th {
+            background: #0f172a;
+            color: #fff;
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        tbody tr:nth-child(even) {
+            background: #f8fafc;
+        }
+        tbody tr:hover {
+            background: #f1f5f9;
+        }
+        tbody td {
+            padding: 9px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        .income-value { color: #059669; font-weight: 600; }
+        .expense-value { color: #dc2626; font-weight: 600; }
+        .positive { color: #059669; font-weight: 600; }
+        .negative { color: #dc2626; font-weight: 600; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .summary-card {
+            max-width: 340px;
+            margin-left: auto;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 14px;
+        }
+        .summary-row .s-label { color: #475569; font-weight: 500; }
+        .summary-row .s-value { font-weight: 700; }
+        .summary-row.income .s-value { color: #059669; }
+        .summary-row.expense .s-value { color: #dc2626; }
+        .summary-divider {
+            height: 2px;
+            background: #e2e8f0;
+            margin: 6px 0;
+        }
+        .summary-row.balance .s-label { font-weight: 700; color: #0f172a; }
+        .summary-row.balance .s-value { font-size: 17px; }
+        .footer {
+            margin-top: 32px;
+            font-size: 11px;
+            color: #94a3b8;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 12px;
+        }
+        @media print {
+            body { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="report-header">
+        <div class="report-title">
+            <h1>Relatório – Livro Caixa</h1>
+            <p>Gerado em: ${new Date().toLocaleString('pt-br')}</p>
+        </div>
+        <div class="report-logo">FinanceApp</div>
+    </div>
+
+    <div class="filters-section">
+        <div class="filter-tag">
+            <span class="label">Período:</span>
+            <span class="value">${periodLabel}</span>
+        </div>
+        <div class="filter-tag">
+            <span class="label">Conta:</span>
+            <span class="value">${accountLabel}</span>
+        </div>
+        <div class="filter-tag">
+            <span class="label">Tipo:</span>
+            <span class="value">${typeLabel}</span>
+        </div>
+        <div class="filter-tag">
+            <span class="label">Categoria:</span>
+            <span class="value">${categoryLabel}</span>
+        </div>
+    </div>
+
+    ${tableClone.outerHTML}
+
+    <div class="summary-card">
+        <div class="summary-row income">
+            <span class="s-label">+ Receitas (Entradas)</span>
+            <span class="s-value">${totalIncome}</span>
+        </div>
+        <div class="summary-row expense">
+            <span class="s-label">- Despesas (Saídas)</span>
+            <span class="s-value">${totalExpense}</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row balance">
+            <span class="s-label">= Saldo do Período</span>
+            <span class="s-value" style="color: ${balanceColor}">${balance}</span>
+        </div>
+    </div>
+
+    <div class="footer">Documento gerado pelo FinanceApp &bull; Uso interno &bull; ${new Date().toLocaleDateString('pt-br')}</div>
+
+    <script>window.onload = () => { window.print(); }<\/script>
+</body>
+</html>`);
+        printWindow.document.close();
     },
 
     populateCashbookFilters() {
