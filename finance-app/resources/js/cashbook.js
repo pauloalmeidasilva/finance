@@ -1,13 +1,17 @@
 /* Tela Livro Caixa: filtros, lançamentos, resumo e impressão. */
 const CashbookScreen = {
+
+    // Inicializa os botões e interações da tela
     init() {
         document.getElementById('openCashbookModal')?.addEventListener('click', () => this.openForm());
+        document.getElementById('printCashbookBtn')?.addEventListener('click', () => this.print());
         document.querySelectorAll('.close-cashbook-modal').forEach(button => button.addEventListener('click', () => FinanceCore.toggleModal('cashbookModal', false)));
         document.getElementById('cashbookForm')?.addEventListener('submit', event => this.save(event));
         ['cashbookPeriodFilter', 'cashbookAccountFilter', 'cashbookTypeFilter', 'cashbookCategoryFilter'].forEach(id => {
             document.getElementById(id)?.addEventListener('change', () => this.render());
         });
     },
+
 
     render() {
         const periodId = document.getElementById('cashbookPeriodFilter')?.value || FinanceCore.data.currentPeriod;

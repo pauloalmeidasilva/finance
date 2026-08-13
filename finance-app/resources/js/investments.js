@@ -1,22 +1,30 @@
 /* Eventos e operações da tela de investimentos. */
 const InvestmentsScreen = {
+    
+    // Inicializa os botões da tela de investimentos
     init() {
+        // botão de abertura do modal
         document.getElementById('openInvestmentModal')?.addEventListener('click', () => this.openModal());
+        // Botão de fechamento do modal
         document.querySelectorAll('#investmentModal .close-modal').forEach(button => {
             button.addEventListener('click', () => this.closeModal());
         });
+        // botão de submissão do formulário
         document.getElementById('investmentForm')?.addEventListener('submit', event => this.submit(event));
     },
 
+    // Função de abertura do modal
     openModal() {
         document.getElementById('investmentForm')?.reset();
         FinanceCore.toggleModal('investmentModal', true);
     },
 
+    // função de fechamento do modal
     closeModal() {
         FinanceCore.toggleModal('investmentModal', false);
     },
 
+    // função de submissão do formulário
     async submit(event) {
         event.preventDefault();
         const account = FinanceCore.currentAccount();
@@ -35,6 +43,7 @@ const InvestmentsScreen = {
         App.refresh();
     },
 
+    // função de exclusão de registro
     async delete(id) {
         const account = FinanceCore.currentAccount();
         if (!account) return;
@@ -44,6 +53,7 @@ const InvestmentsScreen = {
         App.refresh();
     },
 
+    // Renderização da tabela
     render() {
         const body = document.querySelector('#investmentTable tbody');
         if (!body) return;

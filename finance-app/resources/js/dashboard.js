@@ -2,8 +2,12 @@
 const DashboardScreen = {
     chart: null,
 
+    // Inicialização dos botões e gráficos da tela
     init() {
+        // Captura o evento de mudança filtro select
         document.getElementById('dashboardAccountFilter')?.addEventListener('change', () => this.refresh());
+
+        // Carrega o gráfico
         const canvas = document.getElementById('mainChart');
         if (!canvas) return;
         this.chart = new Chart(canvas.getContext('2d'), { type: 'line', data: { labels: [], datasets: [
@@ -12,6 +16,7 @@ const DashboardScreen = {
         ] }, options: { responsive: true, maintainAspectRatio: false } });
     },
 
+    // função que atualiza os dados em tela com base no filtro informado pelo usuário
     refresh() {
         const accounts = this.selectedAccounts();
         const income = accounts.reduce((sum, account) => sum + FinanceCore.incomes(account).reduce((total, item) => total + item.value, 0), 0);
@@ -29,11 +34,13 @@ const DashboardScreen = {
         EntriesScreen.renderTables();
     },
 
+    // Recupera os registros de contas cadastradas
     selectedAccounts() {
         const selected = document.getElementById('dashboardAccountFilter')?.value || 'all';
         return selected === 'all' ? FinanceCore.accounts() : [FinanceCore.data.accounts[selected]].filter(Boolean);
     },
 
+    // Renderiza a barra de progresso do sistema 50-15-35
     renderRule(income, investment) {
         const expenses = FinanceCore.accounts().flatMap(account => FinanceCore.expenses(account));
         const values = { essentials: expenses.filter(item => item.category === 'essentials').reduce((sum, item) => sum + item.value, 0), lifestyle: expenses.filter(item => item.category === 'lifestyle').reduce((sum, item) => sum + item.value, 0), investment };
@@ -46,6 +53,7 @@ const DashboardScreen = {
         });
     },
 
+    // Renderiza o gráfico da tela
     renderChart(accounts) {
         if (!this.chart) return;
         const labels = [], incomes = [], expenses = [];
