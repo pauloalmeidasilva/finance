@@ -1,4 +1,12 @@
 /* Eventos e operações da tela de categorias. */
+
+const categories = {
+    income: "Receitas",
+    essentials: "Despesas Necessárias",
+    lifestyle: "Despesas Eventuais",
+    investments: "Investimentos"
+}
+
 const CategoriesScreen = {
     init() {
         document.getElementById('openCategoryModal')?.addEventListener('click', () => this.openModal());
@@ -19,15 +27,14 @@ const CategoriesScreen = {
 
     async submit(event) {
         event.preventDefault();
-        const name = document.getElementById('categoryName').value.trim();
-        const subcategories = document.getElementById('categorySubcategories').value
-            .split(',')
-            .map(item => item.trim())
-            .filter(Boolean);
+        const name = document.getElementById('categoryName').value;
+        const subcategories = document.getElementById('categorySubcategories').value;
 
         if (!name) return;
-        if (FinanceCore.data.categories.some(category => category.name.toLowerCase() === name.toLowerCase())) {
-            alert('Já existe uma categoria com esse nome.');
+
+        
+        if (FinanceCore.data.categories.some(category => category.subcategories.toLowerCase() === subcategories.toLowerCase())) {
+            alert('Já existe uma subcategoria com esse nome.');
             return;
         }
 
