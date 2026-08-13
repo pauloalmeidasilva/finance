@@ -46,6 +46,9 @@
                 <a href="#" class="nav-item" data-section="investments">
                     <i class="ph ph-piggy-bank"></i> Investimentos
                 </a>
+                <a href="#" class="nav-item" data-section="category">
+                    <i class="ph ph-tag"></i> Categorias
+                </a>
                 <a href="#" class="nav-item" data-section="about">
                     <i class="ph ph-info"></i> Sobre
                 </a>
@@ -59,7 +62,8 @@
                     <span>Família</span>
                 </div>
             </div>
-        </aside>        <!-- Main Content Shell -->
+        </aside> 
+        <!-- Main Content Shell -->
         <main class="main-content" id="main-container">
             <!-- Screens will be injected here -->
             <div class="loading-state">
@@ -67,8 +71,7 @@
                 <p>Carregando seções...</p>
             </div>
         </main>
-
-        </main>
+        <!-- </main> -->
     </div>
 
     <!-- Modals -->
@@ -155,8 +158,39 @@
         </div>
     </div>
 
+    <div id="categoryModal" class="modal">
+        <div class="modal-content glass">
+            <h2>Nova Categoria</h2>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <input type="text" id="categoryName" required placeholder="Ex: Alimentação">
+                </div>
+                <div class="form-group">
+                    <label>Subcategorias</label>
+                    <input type="text" id="categorySubcategories" placeholder="Ex: Supermercado, Restaurantes">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary close-modal">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="js/neutralino.js"></script>
     <script src="js/chart.min.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/theme-manager.js"></script>
+    <script src="js/screen-loader.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/entries.js"></script>
+    <script src="js/investments.js"></script>
+    <script src="js/categories.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/accounts.js"></script>
+    <script src="js/periods.js"></script>
+    <script src="js/cashbook.js"></script>
     <script src="js/main.js"></script>
 </body>
 
