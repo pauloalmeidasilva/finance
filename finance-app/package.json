@@ -1,0 +1,14 @@
+{
+  "name": "finance-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "neu run",
+    "debug": "neu run -- --window-enable-inspector",
+    "build": "neu build",
+    "preview": "neu run"
+  },
+  "devDependencies": {
+    "@neutralinojs/neu": "^11.7.2"
+  }
+}
