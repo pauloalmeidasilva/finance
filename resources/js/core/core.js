@@ -74,32 +74,52 @@ const DatabaseManager = {
     `,
 
     /**
+     * Carga inicial das 4 categorias fixas do sistema.
+     */
+    seedDefaultCategories() {
+        const defaultCategories = [
+            { id: "income", name: "Receitas" },
+            { id: "essentials", name: "Despesas Necessárias" },
+            { id: "lifestyle", name: "Despesas Eventuais" },
+            { id: "investments", name: "Investimentos" }
+        ];
+
+        defaultCategories.forEach(cat => {
+            this.db.run(
+                "INSERT OR IGNORE INTO categories (id, name) VALUES (?, ?)",
+                [cat.id, cat.name]
+            );
+        });
+    },
+
+    /**
      * Carrega o banco de dados do disco rígido.
      * Se o arquivo não existir, cria um banco novo em memória e aplica o schema.
      */
     async init() {
         try {
-            // Inicializa a engine do SQL.js buscando o arquivo WebAssembly na pasta lib
             const SQL = await initSqlJs({ locateFile: (file) => `js/lib/${file}` });
-            
-            // Define o caminho físico do arquivo no sistema operacional
             const dbPath = `${window.NL_DATAPATH || "."}/${this.databaseName}`;
             
             let fileBuffer = null;
             try {
-                // Tenta ler os bytes do arquivo caso ele já exista
                 fileBuffer = new Uint8Array(
                     await Neutralino.filesystem.readBinaryFile(dbPath)
                 );
             } catch (err) {
-                console.log("Arquivo de banco de dados não encontrado. Criando um novo...");
+                console.log("Criando novo banco de dados...");
             }
 
-            // Se existiam bytes lidos, abre o banco existente; senão, cria em memória
             this.db = fileBuffer ? new SQL.Database(fileBuffer) : new SQL.Database();
             
-            // Aplica as instruções SQL de criação das tabelas
+            // Aplica as tabelas
             this.db.run(this.schema);
+            
+            // Garante que as 4 categorias bases existam no banco
+            this.seedDefaultCategories();
+            
+            // Salva a estrutura inicial no disco
+            await this.persist();
             
             console.log("Banco de dados inicializado com sucesso.");
         } catch (error) {

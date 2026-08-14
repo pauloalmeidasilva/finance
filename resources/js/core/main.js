@@ -34,6 +34,9 @@ const App = {
             // 5. Atualiza elementos visuais fixos
             this.updateCurrentDate();
 
+            // 6. Renderiza a tela inicial / ativa
+            this.handleRoutePageChange('dashboard');
+
             console.log("Aplicativo inicializado com sucesso!");
         } catch (error) {
             console.error("Falha na inicialização do aplicativo:", error);
@@ -68,6 +71,11 @@ const App = {
         console.log(`Navegou para a seção: ${sectionId}`);
         // Os módulos de tela (AccountsScreen, CategoriesScreen, etc)
         // escutarão esse evento no futuro para recarregar seus dados.
+
+        // Chama a renderização da tela correspondente
+        if ((sectionId === 'category' || sectionId === 'categories') && typeof CategoriesScreen !== 'undefined') {
+            CategoriesScreen.render();
+        }
     },
 
     // ========================================================================
