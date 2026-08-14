@@ -1,6 +1,8 @@
-/* Estado, persistência e utilitários compartilhados do aplicativo. */
+/* Estado, persistência SQLite e utilitários compartilhados do aplicativo. */
 const FinanceCore = {
-    storageKey: 'finance_data',
+    databaseName: 'finance.sqlite',
+    legacyStorageKey: 'finance_data',
+    database: null,
     data: null,
 
     createInitialData() {
@@ -38,29 +40,49 @@ const FinanceCore = {
     },
 
     async load() {
-        try {
-            const content = await Neutralino.storage.getData(this.storageKey);
-            const data = JSON.parse(content);
-            if (!data || !data.accounts || !data.periods) throw new Error('Dados inválidos');
-            data.categories = Array.isArray(data.categories) ? data.categories : [
-                { id: 'essentials', name: 'Essenciais', subcategories: [] },
-                { id: 'lifestyle', name: 'Estilo de Vida', subcategories: [] },
-                { id: 'other', name: 'Outros', subcategories: [] }
-            ];
-            Object.values(data.accounts).forEach(account => {
-                account.entries = Array.isArray(account.entries) ? account.entries : [];
-                account.investments = Array.isArray(account.investments) ? account.investments : [];
-            });
-            this.data = data;
-        } catch {
-            this.data = this.createInitialData();
+        const SQL = await initSqlJs({ locateFile: file => `js/${file}` });
+        const path = `${window.NL_DATAPATH || '.'}/${this.databaseName}`;
+        let bytes;
+        try { bytes = new Uint8Array(await Neutralino.filesystem.readBinaryFile(path)); } catch { bytes = null; }
+        this.database = bytes ? new SQL.Database(bytes) : new SQL.Database();
+        this.database.run('CREATE TABLE IF NOT EXISTS app_state (key TEXT PRIMARY KEY, value TEXT NOT NULL)');
+        const stored = this.readState();
+        if (stored) this.data = stored;
+        else {
+            this.data = await this.readLegacyData() || this.createInitialData();
             await this.save();
         }
         return this.data;
     },
 
     async save() {
-        await Neutralino.storage.setData(this.storageKey, JSON.stringify(this.data, null, 2));
+        if (!this.database) throw new Error('Banco de dados não inicializado');
+        this.database.run('INSERT OR REPLACE INTO app_state (key, value) VALUES (?, ?)', ['finance', JSON.stringify(this.data)]);
+        const bytes = this.database.export();
+        await Neutralino.filesystem.writeBinaryFile(`${window.NL_DATAPATH || '.'}/${this.databaseName}`, bytes);
+    },
+
+    readState() {
+        const result = this.database.exec('SELECT value FROM app_state WHERE key = "finance"');
+        if (!result.length || !result[0].values.length) return null;
+        return this.normalizeData(JSON.parse(result[0].values[0][0]));
+    },
+
+    async readLegacyData() {
+        try {
+            const content = await Neutralino.storage.getData(this.legacyStorageKey);
+            return this.normalizeData(JSON.parse(content));
+        } catch { return null; }
+    },
+
+    normalizeData(data) {
+        if (!data?.accounts || !data?.periods) throw new Error('Dados inválidos');
+        data.categories = Array.isArray(data.categories) ? data.categories : this.createInitialData().categories;
+        Object.values(data.accounts).forEach(account => {
+            account.entries = Array.isArray(account.entries) ? account.entries : [];
+            account.investments = Array.isArray(account.investments) ? account.investments : [];
+        });
+        return data;
     },
 
     currentAccount() {
