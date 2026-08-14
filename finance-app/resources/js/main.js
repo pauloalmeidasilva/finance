@@ -12,7 +12,6 @@ const App = {
             this.registerGlobalEvents();
             Navigation.init();
             EntriesScreen.init();
-            InvestmentsScreen.init();
             CategoriesScreen.init();
             DashboardScreen.init();
             AccountsScreen.init();
@@ -36,7 +35,6 @@ const App = {
     refresh() {
         this.populateAccountFilters();
         DashboardScreen.refresh();
-        InvestmentsScreen.render();
         CategoriesScreen.render();
         AccountsScreen.render();
         PeriodsScreen.render();
@@ -53,10 +51,6 @@ const App = {
 
     switchSection(id) { Navigation.show(id); },
     toggleModal(id, show) { FinanceCore.toggleModal(id, show); },
-    deleteItem(type, id) {
-        return type === 'investment' ? InvestmentsScreen.delete(id) : EntriesScreen.delete(type, id);
-    },
-    deleteInvestment(id) { return InvestmentsScreen.delete(id); },
     deleteCategory(id) { return CategoriesScreen.delete(id); },
     translateCategory(category) { return { essentials: 'Essenciais', lifestyle: 'Estilo de Vida', other: 'Outros' }[category] || category || '-'; },
     openEditAccountModal(id) { AccountsScreen.openEdit(id); },

@@ -1,6 +1,6 @@
 /* Carrega as telas HTML dentro do container principal. */
 const ScreenLoadingManager = {
-    screens: ['dashboard', 'cashbook', 'periods', 'accounts', 'investments', 'category', 'about'],
+    screens: ['dashboard', 'cashbook', 'periods', 'accounts', 'category', 'about'],
 
     async loadAll() {
         const container = document.getElementById('main-container');
