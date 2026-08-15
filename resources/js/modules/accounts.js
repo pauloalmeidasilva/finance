@@ -236,10 +236,6 @@ const AccountsScreen = {
             "globalInactiveBalance",
             App.formatCurrency(totalInactiveBalance),
         );
-        App.setText(
-            "totalActiveBalance",
-            App.formatCurrency(totalActiveBalance),
-        );
         App.setText("totalAccountsBalance", App.formatCurrency(totalBalance));
         App.setText("activeAccountsCount", activeCount);
         App.setText("totalAccountsCount", accounts.length);
