@@ -86,14 +86,15 @@ const AccountsScreen = {
             // Garante que o ID seja tratado como string para evitar inconsistências no SQLite
             const targetId = String(accountId);
 
-            const transactions = DatabaseManager.query(
-                "SELECT type, value FROM entries WHERE CAST(account_id AS TEXT) = ?",
-                [targetId]
-            ) || [];
+            const transactions =
+                DatabaseManager.query(
+                    "SELECT type, value FROM entries WHERE CAST(account_id AS TEXT) = ?",
+                    [targetId],
+                ) || [];
 
             return transactions.reduce((acc, item) => {
                 const amount = parseFloat(item.value) || 0;
-                return item.type === 'income' ? acc + amount : acc - amount;
+                return item.type === "income" ? acc + amount : acc - amount;
             }, 0);
         } catch (error) {
             console.warn("Erro ao calcular saldo da conta:", error);
