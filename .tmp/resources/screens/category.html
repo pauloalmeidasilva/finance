@@ -1,0 +1,57 @@
+<section id="category" class="content-section">
+    <header class="section-header">
+        <div class="header-main">
+            <h1>Categorias & Subcategorias</h1>
+            <p class="section-subtitle">Organize suas finanças utilizando as categorias base e suas subcategorias.</p>
+        </div>
+    </header>
+
+    <div class="table-container glass">
+        <table id="categoryTable">
+            <thead>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Meta (%)</th>
+                    <th>Subcategorias Cadastradas</th>
+                    <th style="width: 150px; text-align: center;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+    <div id="subcategoryModal" class="modal">
+        <div class="modal-content glass">
+            <h2 id="subcategoryModalTitle">Nova Subcategoria</h2>
+            
+            <form id="subcategoryForm">
+                <input type="hidden" id="subcategoryCategoryId" />
+                
+                <input type="hidden" id="subcategoryId" />
+
+                <div class="form-group">
+                    <label>Categoria Pai</label>
+                    <input type="text" id="subcategoryCategoryName" disabled readonly class="input-disabled" />
+                </div>
+
+                <div class="form-group">
+                    <label for="subcategoryName">Nome da Subcategoria</label>
+                    <input
+                        type="text"
+                        id="subcategoryName"
+                        placeholder="Ex: Mercado, Aluguel, Farmácia..."
+                        required
+                    />
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary close-modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
