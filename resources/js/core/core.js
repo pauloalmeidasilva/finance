@@ -37,20 +37,10 @@ const DatabaseManager = {
             is_active INTEGER NOT NULL DEFAULT 1
         );
 
-        CREATE TABLE IF NOT EXISTS periods (
-            id TEXT PRIMARY KEY,
-            name TEXT NOT NULL,
-            description TEXT,
-            start_date TEXT NOT NULL,
-            end_date TEXT,
-            is_open INTEGER NOT NULL DEFAULT 1,
-            close_description TEXT,
-            created_at TEXT NOT NULL
-        );
-
         CREATE TABLE IF NOT EXISTS categories (
             id TEXT PRIMARY KEY,
-            name TEXT NOT NULL
+            name TEXT NOT NULL,
+            type TEXT NOT NULL DEFAULT 'expense' -- 'income' ou 'expense'
         );
 
         CREATE TABLE IF NOT EXISTS subcategories (
@@ -60,34 +50,35 @@ const DatabaseManager = {
         );
 
         CREATE TABLE IF NOT EXISTS entries (
-            id INTEGER PRIMARY KEY,
+            id TEXT PRIMARY KEY,
             account_id TEXT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-            period_id TEXT REFERENCES periods(id) ON DELETE SET NULL,
-            type TEXT NOT NULL,
+            category_id TEXT REFERENCES categories(id) ON DELETE SET NULL,
+            subcategory_id INTEGER REFERENCES subcategories(id) ON DELETE SET NULL,
+            type TEXT NOT NULL DEFAULT 'income', -- 'income' ou 'expense'
             value REAL NOT NULL DEFAULT 0,
-            description TEXT,
-            category TEXT,
+            description TEXT NOT NULL,
             notes TEXT,
             date TEXT NOT NULL,
-            created_at TEXT NOT NULL
+            transfer_group_id TEXT, -- Usado para agrupar as duas pontas de uma transferência
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
     `,
 
     /**
-     * Carga inicial das 4 categorias fixas do sistema.
+     * Carga inicial das categorias padrão do sistema.
      */
     seedDefaultCategories() {
         const defaultCategories = [
-            { id: "income", name: "Receitas" },
-            { id: "essentials", name: "Despesas Necessárias" },
-            { id: "lifestyle", name: "Despesas Eventuais" },
-            { id: "investments", name: "Investimentos" }
+            { id: "income_default", name: "Receita Geral", type: "income" },
+            { id: "essentials", name: "Despesas Necessárias", type: "expense" },
+            { id: "lifestyle", name: "Despesas Eventuais", type: "expense" },
+            { id: "investments", name: "Investimentos", type: "expense" }
         ];
 
         defaultCategories.forEach(cat => {
             this.db.run(
-                "INSERT OR IGNORE INTO categories (id, name) VALUES (?, ?)",
-                [cat.id, cat.name]
+                "INSERT OR IGNORE INTO categories (id, name, type) VALUES (?, ?, ?)",
+                [cat.id, cat.name, cat.type]
             );
         });
     },
@@ -115,7 +106,7 @@ const DatabaseManager = {
             // Aplica as tabelas
             this.db.run(this.schema);
             
-            // Garante que as 4 categorias bases existam no banco
+            // Garante que as categorias base existam no banco
             this.seedDefaultCategories();
             
             // Salva a estrutura inicial no disco
@@ -148,7 +139,7 @@ const DatabaseManager = {
 
     /**
      * Executa comandos SQL que ALTERAM dados (INSERT, UPDATE, DELETE).
-     * @param {string} sqlString - Instrução SQL. Ex: "INSERT INTO categories VALUES (?, ?)"
+     * @param {string} sqlString - Instrução SQL. Ex: "INSERT INTO categories VALUES (?, ?, ?)"
      * @param {Array} params - Lista de parâmetros que substituem as interrogações (?).
      */
     async execute(sqlString, params = []) {

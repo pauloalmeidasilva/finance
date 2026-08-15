@@ -86,7 +86,7 @@ const CategoriesScreen = {
                     <td><div class="subcategories-wrapper">${subcategoriesHtml}</div></td>
                     <td style="text-align: center;">
                         <button class="btn-secondary btn-sm" data-action="add-sub" data-cat-id="${category.id}" data-cat-name="${meta.name}">
-                            <i class="ph ph-plus"></i> Add Subcategoria
+                            <i class="ph ph-plus"></i> Subcategoria
                         </button>
                     </td>
                 </tr>

@@ -18,7 +18,7 @@ const App = {
             console.log("Iniciando carregamento do aplicativo...");
 
             // 1. Carrega os arquivos de tela dinâmicos (se houver o gerenciador visual)
-            if (typeof ScreenLoadingManager !== 'undefined') {
+            if (typeof ScreenLoadingManager !== "undefined") {
                 await ScreenLoadingManager.loadAll();
             }
 
@@ -26,7 +26,9 @@ const App = {
             await DatabaseManager.init();
 
             // 3. Inicializa o controle de rotas/navegação
-            Navigation.init((sectionId) => this.handleRoutePageChange(sectionId));
+            Navigation.init((sectionId) =>
+                this.handleRoutePageChange(sectionId),
+            );
 
             // 4. Registra eventos nativos da janela e botões globais
             this.registerGlobalEvents();
@@ -35,12 +37,15 @@ const App = {
             this.updateCurrentDate();
 
             // 6. Renderiza a tela inicial / ativa
-            this.handleRoutePageChange('dashboard');
+            this.handleRoutePageChange("dashboard");
 
             console.log("Aplicativo inicializado com sucesso!");
         } catch (error) {
             console.error("Falha na inicialização do aplicativo:", error);
-            this.showAlert("Erro ao iniciar a aplicação. Verifique o console.", "danger");
+            this.showAlert(
+                "Erro ao iniciar a aplicação. Verifique o console.",
+                "danger",
+            );
         } finally {
             // Remove a tela de carregamento (splash screen)
             this.hideSplashScreen();
@@ -52,14 +57,14 @@ const App = {
      */
     registerGlobalEvents() {
         // Evento acionado ao fechar a janela da aplicação
-        Neutralino.events.on('windowClose', () => {
+        Neutralino.events.on("windowClose", () => {
             Neutralino.app.exit();
         });
 
         // Alternador de tema (Claro / Escuro)
-        const themeBtn = document.getElementById('themeToggle');
-        if (themeBtn && typeof ThemeManager !== 'undefined') {
-            themeBtn.addEventListener('click', () => ThemeManager.toggle());
+        const themeBtn = document.getElementById("themeToggle");
+        if (themeBtn && typeof ThemeManager !== "undefined") {
+            themeBtn.addEventListener("click", () => ThemeManager.toggle());
         }
     },
 
@@ -73,8 +78,20 @@ const App = {
         // escutarão esse evento no futuro para recarregar seus dados.
 
         // Chama a renderização da tela correspondente
-        if ((sectionId === 'category' || sectionId === 'categories') && typeof CategoriesScreen !== 'undefined') {
+        if (
+            (sectionId === "category" || sectionId === "categories") &&
+            typeof CategoriesScreen !== "undefined"
+        ) {
             CategoriesScreen.render();
+        }
+
+        // Chama a renderização da tela de contas
+        if (sectionId === "accounts") {
+            AccountsScreen.render(); // Força a busca no SQLite e montagem da tabela
+        }
+
+        if (sectionId === "cashbook") {
+            CashbookScreen.init();
         }
     },
 
@@ -122,12 +139,12 @@ const App = {
     showAlert(message, type = "info") {
         // Implementação simplificada de aviso (pode ser customizada no futuro)
         console.log(`[AVISO - ${type.toUpperCase()}]: ${message}`);
-        
-        const alertBox = document.getElementById('global-alert');
+
+        const alertBox = document.getElementById("global-alert");
         if (alertBox) {
             alertBox.textContent = message;
             alertBox.className = `alert alert-${type} show`;
-            setTimeout(() => alertBox.classList.remove('show'), 4000);
+            setTimeout(() => alertBox.classList.remove("show"), 4000);
         }
     },
 
@@ -142,21 +159,27 @@ const App = {
      * Atualiza o cabeçalho com a data atual formatada por extenso.
      */
     updateCurrentDate() {
-        const currentDate = new Date().toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
-        this.setText('currentDate', currentDate.charAt(0).toUpperCase() + currentDate.slice(1));
+        const currentDate = new Date().toLocaleString("pt-BR", {
+            month: "long",
+            year: "numeric",
+        });
+        this.setText(
+            "currentDate",
+            currentDate.charAt(0).toUpperCase() + currentDate.slice(1),
+        );
     },
 
     /**
      * Esconde a tela de carregamento (Splash Screen) com um efeito de fade out.
      */
     hideSplashScreen() {
-        const splash = document.getElementById('splash-screen');
+        const splash = document.getElementById("splash-screen");
         if (!splash) return;
         setTimeout(() => {
-            splash.classList.add('fade-out');
+            splash.classList.add("fade-out");
             setTimeout(() => splash.remove(), 800);
         }, 600);
-    }
+    },
 };
 
 // Inicializa a API do Neutralino e logo em seguida inicia o App

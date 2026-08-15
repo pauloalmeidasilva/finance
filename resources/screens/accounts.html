@@ -1,18 +1,16 @@
-<!-- Accounts Section -->
+<!-- Seção de Contas Bancárias -->
 <section id="accounts" class="content-section">
     <header class="section-header">
         <div class="header-main">
             <h1>Contas Bancárias</h1>
-            <span class="section-total"
-                >Total Ativo: <b id="totalActiveBalance">R$ 0,00</b></span
-            >
+            <span class="section-total">Total Ativo: <b id="totalActiveBalance">R$ 0,00</b></span>
         </div>
         <button class="btn-primary" id="openAccountModal">
             <i class="ph ph-plus"></i> Nova Conta
         </button>
     </header>
 
-    <!-- Top Summary Banner -->
+    <!-- Banner de Resumo (Cards Superiores Mantidos) -->
     <div class="accounts-summary glass">
         <div class="accounts-summary-stat">
             <div class="accounts-summary-icon balance">
@@ -20,12 +18,7 @@
             </div>
             <div>
                 <span class="accounts-summary-label">Saldo Total (Ativo)</span>
-                <h2
-                    id="globalActiveBalance"
-                    class="accounts-summary-value success"
-                >
-                    R$ 0,00
-                </h2>
+                <h2 id="globalActiveBalance" class="accounts-summary-value success">R$ 0,00</h2>
             </div>
         </div>
         <div class="accounts-summary-stat">
@@ -33,15 +26,8 @@
                 <i class="ph ph-eye-slash"></i>
             </div>
             <div>
-                <span class="accounts-summary-label"
-                    >Saldo Total (Inativo)</span
-                >
-                <h2
-                    id="globalInactiveBalance"
-                    class="accounts-summary-value muted"
-                >
-                    R$ 0,00
-                </h2>
+                <span class="accounts-summary-label">Saldo Total (Inativo)</span>
+                <h2 id="globalInactiveBalance" class="accounts-summary-value muted">R$ 0,00</h2>
             </div>
         </div>
         <div class="accounts-summary-stat">
@@ -50,9 +36,7 @@
             </div>
             <div>
                 <span class="accounts-summary-label">Contas Ativas</span>
-                <h2 id="activeAccountsCount" class="accounts-summary-value">
-                    0
-                </h2>
+                <h2 id="activeAccountsCount" class="accounts-summary-value">0</h2>
             </div>
         </div>
         <div class="accounts-summary-stat">
@@ -61,34 +45,41 @@
             </div>
             <div>
                 <span class="accounts-summary-label">Total de Contas</span>
-                <h2 id="totalAccountsCount" class="accounts-summary-value">
-                    0
-                </h2>
+                <h2 id="totalAccountsCount" class="accounts-summary-value">0</h2>
             </div>
         </div>
     </div>
 
-    <!-- Accounts Grid -->
-    <div id="accountsGrid" class="accounts-grid"></div>
+    <!-- Tabela de Contas Cadastradas -->
+    <div class="table-container glass" id="accountsTableContainer">
+        <table id="accountsTable">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Cor</th>
+                    <th>Nome da Conta</th>
+                    <th>Status</th>
+                    <th>Saldo Atual</th>
+                    <th style="text-align: center; width: 200px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Linhas preenchidas dinamicamente via JS -->
+            </tbody>
+        </table>
+    </div>
 
-    <!-- Empty State -->
-    <div id="emptyAccountsState" class="empty-state">
+    <!-- Mensagem de Estado Vazio (Caso não haja contas cadastradas) -->
+    <div id="emptyAccountsState" class="empty-state" style="display: none;">
         <i class="ph ph-bank"></i>
         <h3>Nenhuma conta criada</h3>
-        <p>
-            Crie sua primeira conta bancária para começar a organizar suas
-            finanças
-        </p>
-        <button
-            class="btn-primary"
-            onclick="document.getElementById('openAccountModal').click()"
-        >
+        <p>Crie sua primeira conta bancária para começar a organizar suas finanças.</p>
+        <button class="btn-primary" id="emptyStateCreateBtn">
             <i class="ph ph-plus"></i> Criar Conta
         </button>
     </div>
 </section>
 
-<!-- Add/Edit Account Modal -->
+<!-- Modal de Criar/Editar Conta -->
 <div id="accountModal" class="modal">
     <div class="modal-content glass">
         <div class="modal-title-bar">
@@ -97,53 +88,55 @@
                 <i class="ph ph-x"></i>
             </button>
         </div>
+        
         <form id="accountForm">
+            <!-- ID Oculto utilizado para controle no caso de edição -->
+            <input type="hidden" id="accountId" value="" />
+
             <div class="form-group">
                 <label for="accountName">Nome da Conta</label>
                 <input
                     type="text"
                     id="accountName"
-                    placeholder="Ex: Nubank, Bradesco, Caixa..."
+                    placeholder="Ex: Nubank, Carteira Física, Cofrinho..."
                     required
                 />
             </div>
+
             <div class="form-row">
                 <div class="form-group">
-                    <label for="accountColor">Cor</label>
-                    <select id="accountColor" required>
-                        <option value="indigo">Índigo</option>
-                        <option value="emerald">Verde</option>
-                        <option value="rose">Rosa/Vermelho</option>
-                        <option value="amber">Âmbar</option>
-                        <option value="sky">Azul</option>
-                        <option value="violet">Violeta</option>
-                    </select>
+                    <label for="accountColor">Cor da Conta (Hexadecimal)</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input
+                            type="color"
+                            id="accountColorPicker"
+                            value="#4f46e5"
+                            style="width: 50px; height: 40px; border: none; cursor: pointer; background: transparent;"
+                        />
+                        <input
+                            type="text"
+                            id="accountColor"
+                            value="#4f46e5"
+                            placeholder="#4f46e5"
+                            pattern="^#([A-Fa-f0-9]{6})$"
+                            required
+                        />
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="accountIcon">Ícone</label>
+                    <label for="accountIcon">Ícone da Conta</label>
                     <select id="accountIcon" required>
                         <option value="ph-bank">🏦 Banco</option>
                         <option value="ph-wallet">💳 Carteira</option>
-                        <option value="ph-piggy-bank">🐷 Poupança</option>
-                        <option value="ph-credit-card">💰 Cartão</option>
-                        <option value="ph-coins">🪙 Moedas</option>
-                        <option value="ph-currency-dollar">$ Dólar</option>
-                        <option value="ph-hand-coins">🤝 Investimento</option>
+                        <option value="ph-piggy-bank">🐷 Cofrinho / Poupança</option>
+                        <option value="ph-credit-card">💰 Cartão de Crédito</option>
+                        <option value="ph-coins">🪙 Moedas / Dinheiro</option>
+                        <option value="ph-currency-dollar">$ Investimentos</option>
                     </select>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="accountInitialBalance">Saldo Inicial (R$)</label>
-                <input
-                    type="number"
-                    id="accountInitialBalance"
-                    placeholder="0,00"
-                    step="0.01"
-                    min="0"
-                    value="0"
-                    required
-                />
-            </div>
+
             <div class="modal-actions">
                 <button type="button" class="btn-secondary close-account-modal">
                     Cancelar
@@ -156,7 +149,7 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
+<!-- Modal de Confirmação de Exclusão -->
 <div id="deleteAccountModal" class="modal">
     <div class="modal-content glass" style="max-width: 400px">
         <div class="modal-title-bar">
@@ -164,26 +157,14 @@
                 <i class="ph ph-warning"></i> Deletar Conta
             </h2>
         </div>
-        <p
-            id="deleteAccountMessage"
-            style="color: var(--text-secondary); margin-bottom: 2rem"
-        >
-            Tem certeza que deseja deletar esta conta? Esta ação não pode ser
-            desfeita.
+        <p id="deleteAccountMessage" style="color: var(--text-secondary); margin-bottom: 2rem">
+            Tem certeza que deseja deletar esta conta? Esta ação não pode ser desfeita.
         </p>
         <div class="modal-actions">
-            <button
-                type="button"
-                class="btn-secondary"
-                onclick="App.toggleModal('deleteAccountModal', false)"
-            >
+            <button type="button" class="btn-secondary close-delete-modal">
                 Cancelar
             </button>
-            <button
-                type="button"
-                class="btn-danger"
-                id="confirmDeleteAccountBtn"
-            >
+            <button type="button" class="btn-danger" id="confirmDeleteAccountBtn">
                 <i class="ph ph-trash"></i> Deletar
             </button>
         </div>

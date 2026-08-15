@@ -1,3 +1,6 @@
+/* ==========================================================================
+   1. VARIÁVEIS E DEFINIÇÕES GERAIS
+   ========================================================================== */
 :root {
     --primary: #6366f1;
     --primary-hover: #4f46e5;
@@ -46,13 +49,154 @@ body {
     overflow: hidden;
 }
 
+/* ==========================================================================
+   2. BOTÕES (GERAL E COMPONENTES)
+   ========================================================================== */
+
+/* Base e Estilos Compartilhados */
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Modificador Compacto */
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
+}
+
+/* Variantes de Botões */
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+    background-color: var(--glass-bg);
+    color: var(--text-primary);
+}
+
+.btn-danger {
+    background-color: var(--danger);
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover { 
+    opacity: 0.88; 
+}
+
+/* Botões Utilitários e Ícones */
+.action-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1.25rem;
+    transition: var(--transition);
+}
+
+.action-btn:hover {
+    color: var(--danger);
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.icon-btn:hover { 
+    background: var(--glass-bg); 
+    color: var(--text-primary); 
+}
+
+/* ==========================================================================
+   3. TABELAS E CÉLULAS ESPECÍFICAS
+   ========================================================================== */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 1rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    font-size: 0.95rem;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+#cashbookTable td.income-value {
+    color: var(--success);
+    font-weight: 600;
+}
+
+#cashbookTable td.expense-value {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+#cashbookTable td.balance-value {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* ==========================================================================
+   4. ESTRUTURA GERAL DA APLICAÇÃO & SIDEBAR
+   ========================================================================== */
 .app-container {
     display: flex;
     height: 100vh;
     width: 100vw;
 }
 
-/* Sidebar Styling */
 .sidebar {
     width: 260px;
     background-color: var(--sidebar-bg);
@@ -121,7 +265,9 @@ body {
     font-size: 0.9rem;
 }
 
-/* Main Content Area */
+/* ==========================================================================
+   5. CONTEÚDO PRINCIPAL E SEÇÕES
+   ========================================================================== */
 .main-content {
     flex: 1;
     padding: 2rem;
@@ -136,18 +282,6 @@ body {
 
 .content-section.active {
     display: block;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .section-header {
@@ -187,14 +321,6 @@ body {
     font-weight: 600;
 }
 
-/* Dashboard Cards */
-.summary-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
 .glass {
     background: var(--glass-bg);
     backdrop-filter: blur(12px);
@@ -202,6 +328,16 @@ body {
     border: 1px solid var(--glass-border);
     border-radius: 16px;
     padding: 1.5rem;
+}
+
+/* ==========================================================================
+   6. DASHBOARD, CARDS E GRÁFICOS
+   ========================================================================== */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .card {
@@ -252,20 +388,18 @@ body {
     font-weight: 700;
 }
 
-/* Dashboard Section Structure */
 #dashboard.active {
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-/* Dashboard Grid */
 .dashboard-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 1.5rem;
     flex: 1;
-    min-height: 0; /* Important for flex child expansion */
+    min-height: 0;
 }
 
 @media (max-width: 1024px) {
@@ -333,114 +467,9 @@ body {
     background-color: var(--warning);
 }
 
-/* Buttons */
-.btn-primary {
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: var(--transition);
-}
-
-.btn-primary:hover {
-    background-color: var(--primary-hover);
-}
-
-.btn-secondary {
-    background-color: transparent;
-    border: 1px solid var(--glass-border);
-    color: var(--text-secondary);
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.btn-secondary:hover {
-    background-color: var(--glass-bg);
-    color: var(--text-primary);
-}
-
-/* Tables */
-.table-container {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th {
-    text-align: left;
-    padding: 1rem;
-    color: var(--text-secondary);
-    font-weight: 600;
-    font-size: 0.9rem;
-    border-bottom: 1px solid var(--glass-border);
-}
-
-td {
-    padding: 1rem;
-    border-bottom: 1px solid var(--glass-border);
-    font-size: 0.95rem;
-}
-
-tr:last-child td {
-    border-bottom: none;
-}
-
-.action-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-size: 1.25rem;
-    transition: var(--transition);
-}
-
-.action-btn:hover {
-    color: var(--danger);
-}
-
-/* Modals */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
-    width: 100%;
-    max-width: 500px;
-    padding: 2rem;
-    background: var(--sidebar-bg) !important;
-    border: 1px solid var(--glass-border);
-}
-
-.modal-content h2 {
-    margin-bottom: 1.5rem;
-}
-
+/* ==========================================================================
+   7. FORMULÁRIOS, FILTROS E CAMPOS
+   ========================================================================== */
 .form-group {
     margin-bottom: 1.25rem;
 }
@@ -485,35 +514,12 @@ tr:last-child td {
     border-color: var(--primary);
 }
 
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    margin-top: 2rem;
 }
 
-/* Theme Toggle Button */
-.theme-toggle {
-    background: transparent;
-    border: 1px solid var(--glass-border);
-    color: var(--text-primary);
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    transition: var(--transition);
-    margin-bottom: 1rem;
-}
-
-.theme-toggle:hover {
-    background-color: var(--glass-bg);
-}
-
-/* ─── Filters & Selects ─── */
 .dashboard-filters,
 .cashbook-filters {
     display: flex;
@@ -567,6 +573,62 @@ textarea:focus {
     border-color: var(--primary);
 }
 
+/* ==========================================================================
+   8. MODAIS
+   ========================================================================== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    background: var(--sidebar-bg) !important;
+    border: 1px solid var(--glass-border);
+}
+
+.modal-content h2 {
+    margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.modal-title-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.modal-title-bar h2 { 
+    margin: 0; 
+}
+
+/* ==========================================================================
+   9. GERENCIAMENTO DE PERÍODOS & MENSAGENS DE ALERTA
+   ========================================================================== */
 .warning-message {
     background: rgba(239,68,68,0.1);
     border: 1px solid rgba(239,68,68,0.3);
@@ -580,7 +642,13 @@ textarea:focus {
     color: var(--danger);
 }
 
-/* ─── Periods Management ─── */
+.danger-title {
+    color: var(--danger);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .period-alert {
     display: flex;
     align-items: center;
@@ -659,8 +727,15 @@ textarea:focus {
     text-transform: uppercase;
 }
 
-.badge-period-open { background: rgba(16,185,129,0.15); color: var(--success); }
-.badge-period-closed { background: rgba(239,68,68,0.15); color: var(--danger); }
+.badge-period-open { 
+    background: rgba(16,185,129,0.15); 
+    color: var(--success); 
+}
+
+.badge-period-closed { 
+    background: rgba(239,68,68,0.15); 
+    color: var(--danger); 
+}
 
 .period-card-dates {
     font-size: 0.85rem;
@@ -705,7 +780,9 @@ textarea:focus {
     gap: 0.5rem;
 }
 
-/* ─── Cashbook Subtraction Card ─── */
+/* ==========================================================================
+   10. CÁLCULO E RESUMO DO LIVRO CAIXA
+   ========================================================================== */
 .cashbook-calc-card {
     max-width: 380px;
     margin-left: auto;
@@ -774,23 +851,9 @@ textarea:focus {
     font-weight: 800;
 }
 
-#cashbookTable td.income-value {
-    color: var(--success);
-    font-weight: 600;
-}
-
-#cashbookTable td.expense-value {
-    color: var(--danger);
-    font-weight: 600;
-}
-
-#cashbookTable td.balance-value {
-    font-weight: 700;
-    color: var(--primary);
-}
-
-/* ─── Account Management ─── */
-
+/* ==========================================================================
+   11. GERENCIAMENTO DE CONTAS
+   ========================================================================== */
 .accounts-summary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -838,14 +901,12 @@ textarea:focus {
 .accounts-summary-value.success { color: var(--success); }
 .accounts-summary-value.muted   { color: var(--text-secondary); }
 
-/* Accounts grid of cards */
 .accounts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
-/* Individual account card */
 .account-card {
     position: relative;
     display: flex;
@@ -869,7 +930,6 @@ textarea:focus {
     opacity: 0.55;
 }
 
-/* Colored accent bar at the top */
 .account-accent {
     height: 4px;
     margin: -1.5rem -1.5rem 0;
@@ -883,7 +943,6 @@ textarea:focus {
 .accent-sky     { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
 .accent-violet  { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
 
-/* Header row: icon + name + badge */
 .account-card-header {
     display: flex;
     align-items: center;
@@ -938,7 +997,6 @@ textarea:focus {
 .badge-active   { background: rgba(16,185,129,0.15); color: var(--success); }
 .badge-inactive { background: rgba(148,163,184,0.12); color: var(--text-secondary); }
 
-/* Balance display */
 .account-card-balance {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
@@ -968,7 +1026,6 @@ textarea:focus {
 .account-card-balance-value.negative { color: var(--danger); }
 .account-card-balance-value.zero     { color: var(--text-secondary); }
 
-/* Stats mini row */
 .account-card-stats {
     display: flex;
     gap: 0.4rem;
@@ -1007,7 +1064,6 @@ textarea:focus {
 .account-stat-value.income-color { color: var(--success); }
 .account-stat-value.expense-color { color: var(--danger); }
 
-/* Action buttons row */
 .account-card-actions {
     display: flex;
     gap: 0.4rem;
@@ -1015,36 +1071,9 @@ textarea:focus {
     border-top: 1px solid var(--glass-border);
 }
 
-.account-action-btn {
-    flex: 1;
-    min-width: 0;
-    padding: 0.45rem 0.4rem;
-    border-radius: 6px;
-    border: 1px solid var(--glass-border);
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    transition: var(--transition);
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.account-action-btn:hover { background: var(--glass-bg); color: var(--text-primary); }
-.account-action-btn.btn-toggle-active { color: var(--success); border-color: rgba(16,185,129,0.3); }
-.account-action-btn.btn-toggle-active:hover { background: rgba(16,185,129,0.1); }
-.account-action-btn.btn-toggle-inactive { color: var(--warning); border-color: rgba(245,158,11,0.3); }
-.account-action-btn.btn-toggle-inactive:hover { background: rgba(245,158,11,0.1); }
-.account-action-btn.btn-edit:hover { color: var(--primary); border-color: rgba(99,102,241,0.3); }
-.account-action-btn.btn-delete:hover { color: var(--danger); border-color: rgba(239,68,68,0.3); }
-
-/* Empty state */
+/* ==========================================================================
+   12. ESTADOS VAZIOS (EMPTY STATES)
+   ========================================================================== */
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -1056,72 +1085,30 @@ textarea:focus {
     gap: 0.75rem;
 }
 
-.empty-state > i { font-size: 4rem; color: var(--primary); opacity: 0.25; }
-.empty-state h3  { font-size: 1.25rem; color: var(--text-primary); margin: 0; }
-.empty-state p   { font-size: 0.9rem; margin: 0; }
-.empty-state .btn-primary { margin-top: 0.75rem; }
-
-/* Modal helpers shared with accounts */
-.modal-title-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--glass-border);
+.empty-state > i { 
+    font-size: 4rem; 
+    color: var(--primary); 
+    opacity: 0.25; 
 }
 
-.modal-title-bar h2 { margin: 0; }
-
-.icon-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1.5rem;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
+.empty-state h3 { 
+    font-size: 1.25rem; 
+    color: var(--text-primary); 
+    margin: 0; 
 }
 
-.icon-btn:hover { background: var(--glass-bg); color: var(--text-primary); }
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+.empty-state p { 
+    font-size: 0.9rem; 
+    margin: 0; 
 }
 
-.btn-danger {
-    background-color: var(--danger);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: var(--transition);
+.empty-state .btn-primary { 
+    margin-top: 0.75rem; 
 }
 
-.btn-danger:hover { opacity: 0.88; }
-
-.danger-title {
-    color: var(--danger);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* ─── End Account Management ─── */
-
-/* Splash Screen Styles */
+/* ==========================================================================
+   13. TELA DE CARREGAMENTO (SPLASH SCREEN)
+   ========================================================================== */
 .splash-screen {
     position: fixed;
     top: 0;
@@ -1188,22 +1175,9 @@ textarea:focus {
     pointer-events: none;
 }
 
-@keyframes pulse {
-    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.2)); }
-    50% { transform: scale(1.1); filter: drop-shadow(0 0 25px rgba(99, 102, 241, 0.5)); }
-}
-
-@keyframes rotation {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* About Screen Styles */
+/* ==========================================================================
+   14. TELA SOBRE (ABOUT SCREEN)
+   ========================================================================== */
 .about-container {
     display: flex;
     justify-content: center;
@@ -1313,4 +1287,156 @@ textarea:focus {
 .donation-placeholder:hover {
     background: var(--glass-bg);
     border-color: var(--primary);
+}
+
+/* ==========================================================================
+   15. ANIMAÇÕES (KEYFRAMES)
+   ========================================================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        transform: scale(1); 
+        filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.2)); 
+    }
+    50% { 
+        transform: scale(1.1); 
+        filter: drop-shadow(0 0 25px rgba(99, 102, 241, 0.5)); 
+    }
+}
+
+@keyframes rotation {
+    0% { 
+        transform: rotate(0deg); 
+    }
+    100% { 
+        transform: rotate(360deg); 
+    }
+}
+
+@keyframes fadeInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* ==========================================================================
+   16. ESTILOS DE IMPRESSÃO (RELATÓRIOS)
+   ========================================================================== */
+@media print {
+    /* 1. Esconde a navegação, ações do cabeçalho, modais e elementos desnecessários */
+    .sidebar,
+    .header-actions,
+    .modal,
+    .splash-screen,
+    th:last-child, /* Coluna de Ações na tabela */
+    td:last-child {
+        display: none !important;
+    }
+
+    /* 2. Reseta a estrutura da página para ocupar a folha inteira */
+    body, 
+    .app-container, 
+    .main-content {
+        background: white !important;
+        color: black !important;
+        overflow: visible !important;
+        height: auto !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .main-content {
+        background: transparent !important;
+    }
+
+    /* 3. Remove fundos com transparência e bordas pesadas */
+    .glass {
+        background: transparent !important;
+        border: none !important;
+        backdrop-filter: none !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* 4. Ajuste da Tabela para impressão clara */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-top: 1rem !important;
+    }
+
+    th, td {
+        border: 1px solid #ddd !important;
+        color: black !important;
+        padding: 8px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* 5. Ajuste dos Filtros para aparecerem na impressão como texto explicativo */
+    .cashbook-filters {
+        display: flex !important;
+        gap: 0.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .filter-select, 
+    input[type="date"] {
+        border: 1px solid #ccc !important;
+        background: white !important;
+        color: black !important;
+        appearance: none !important;
+        -webkit-appearance: none;
+        padding: 4px 8px !important;
+    }
+
+    #clearCashbookFiltersBtn {
+        display: none !important; /* Oculta botão de limpar filtro */
+    }
+
+    /* 6. Card de Totais ajustado */
+    .cashbook-calc-card {
+        border: 1px solid #ccc !important;
+        background: white !important;
+        color: black !important;
+        page-break-inside: avoid;
+        margin-top: 1rem !important;
+
+        padding: 1rem !important;
+    }
+
+    .calc-label, .calc-value {
+        color: black !important;
+    }
+
+    /* 7. Exibe a data de emissão exclusiva na impressão */
+    .print-only-header {
+        display: block !important;
+        margin-bottom: 1rem;
+        font-size: 0.85rem;
+        color: #555;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 0.5rem;
+    }
+}
+
+/* Oculta o cabeçalho de emissão na tela normal */
+.print-only-header {
+    display: none;
 }
