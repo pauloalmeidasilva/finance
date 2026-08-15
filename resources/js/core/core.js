@@ -17,6 +17,9 @@ const DatabaseManager = {
     // Instância ativa do banco de dados na memória
     db: null,
 
+    // Flag de controle para verificar se a base está pronta
+    isInitialized: false,
+
     /**
      * Script SQL de criação das tabelas (Schema/Migrações).
      * Executado sempre na inicialização para garantir que as tabelas existam.
@@ -77,6 +80,8 @@ const DatabaseManager = {
 
     /**
      * Carga inicial das categorias padrão do sistema.
+     * A tabela `categories` usa somente a coluna `type`; `category_type` é
+     * uma classificação derivada usada nas consultas, não uma coluna do banco.
      */
     seedDefaultCategories() {
         const defaultCategories = [
@@ -118,16 +123,15 @@ const DatabaseManager = {
                 ? new SQL.Database(fileBuffer)
                 : new SQL.Database();
 
-            // Aplica as tabelas
             this.db.run(this.schema);
-
-            // Garante que as categorias base existam no banco
             this.seedDefaultCategories();
-
-            // Salva a estrutura inicial no disco
             await this.persist();
 
+            this.isInitialized = true;
             console.log("Banco de dados inicializado com sucesso.");
+
+            // Dispara um evento global informando que o banco está pronto
+            window.dispatchEvent(new CustomEvent("db:ready"));
         } catch (error) {
             console.error("Erro crítico ao carregar o banco de dados:", error);
             throw error;
@@ -159,6 +163,10 @@ const DatabaseManager = {
      * @param {Array} params - Lista de parâmetros que substituem as interrogações (?).
      */
     async execute(sqlString, params = []) {
+        if (!this.db) {
+            console.warn("Aguarde a inicialização do banco de dados.");
+            return;
+        }
         try {
             this.db.run(sqlString, params);
             await this.persist(); // Salva no disco imediatamente após modificar
@@ -175,6 +183,13 @@ const DatabaseManager = {
      * @returns {Array<Object>} Lista de objetos contendo chave/valor de cada coluna.
      */
     query(sqlString, params = []) {
+        if (!this.db) {
+            console.warn(
+                "Tentativa de consulta antes do banco estar pronto:",
+                sqlString,
+            );
+            return [];
+        }
         try {
             const stmt = this.db.prepare(sqlString);
             stmt.bind(params);

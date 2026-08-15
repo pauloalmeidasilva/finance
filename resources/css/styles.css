@@ -40,7 +40,7 @@ body.light-mode {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 body {
@@ -104,8 +104,8 @@ body {
     border: none;
 }
 
-.btn-danger:hover { 
-    opacity: 0.88; 
+.btn-danger:hover {
+    opacity: 0.88;
 }
 
 /* Botões Utilitários e Ícones */
@@ -137,9 +137,9 @@ body {
     transition: var(--transition);
 }
 
-.icon-btn:hover { 
-    background: var(--glass-bg); 
-    color: var(--text-primary); 
+.icon-btn:hover {
+    background: var(--glass-bg);
+    color: var(--text-primary);
 }
 
 /* ==========================================================================
@@ -272,7 +272,11 @@ tr:last-child td {
     flex: 1;
     padding: 2rem;
     overflow-y: auto;
-    background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent);
+    background: radial-gradient(
+        circle at top right,
+        rgba(99, 102, 241, 0.05),
+        transparent
+    );
 }
 
 .content-section {
@@ -562,7 +566,7 @@ textarea {
     border-radius: 8px;
     padding: 0.75rem;
     color: var(--text-primary);
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 0.9rem;
     resize: vertical;
     transition: var(--transition);
@@ -622,16 +626,16 @@ textarea:focus {
     border-bottom: 1px solid var(--glass-border);
 }
 
-.modal-title-bar h2 { 
-    margin: 0; 
+.modal-title-bar h2 {
+    margin: 0;
 }
 
 /* ==========================================================================
    9. GERENCIAMENTO DE PERÍODOS & MENSAGENS DE ALERTA
    ========================================================================== */
 .warning-message {
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.3);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: 8px;
     padding: 1rem;
     color: var(--text-secondary);
@@ -727,14 +731,14 @@ textarea:focus {
     text-transform: uppercase;
 }
 
-.badge-period-open { 
-    background: rgba(16,185,129,0.15); 
-    color: var(--success); 
+.badge-period-open {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
 }
 
-.badge-period-closed { 
-    background: rgba(239,68,68,0.15); 
-    color: var(--danger); 
+.badge-period-closed {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
 }
 
 .period-card-dates {
@@ -813,9 +817,15 @@ textarea:focus {
     font-size: 1.15rem;
 }
 
-.calc-row.income .calc-label i { color: var(--success); }
-.calc-row.expense .calc-label i { color: var(--danger); }
-.calc-row.balance .calc-label i { color: var(--primary); }
+.calc-row.income .calc-label i {
+    color: var(--success);
+}
+.calc-row.expense .calc-label i {
+    color: var(--danger);
+}
+.calc-row.balance .calc-label i {
+    color: var(--primary);
+}
 
 .calc-value {
     font-weight: 700;
@@ -879,10 +889,22 @@ textarea:focus {
     flex-shrink: 0;
 }
 
-.accounts-summary-icon.balance  { background: rgba(99,102,241,0.12); color: var(--primary); }
-.accounts-summary-icon.income   { background: rgba(16,185,129,0.12); color: var(--success); }
-.accounts-summary-icon.muted    { background: rgba(148,163,184,0.12); color: var(--text-secondary); }
-.accounts-summary-icon.investment { background: rgba(245,158,11,0.12); color: var(--warning); }
+.accounts-summary-icon.balance {
+    background: rgba(99, 102, 241, 0.12);
+    color: var(--primary);
+}
+.accounts-summary-icon.income {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--success);
+}
+.accounts-summary-icon.muted {
+    background: rgba(148, 163, 184, 0.12);
+    color: var(--text-secondary);
+}
+.accounts-summary-icon.investment {
+    background: rgba(245, 158, 11, 0.12);
+    color: var(--warning);
+}
 
 .accounts-summary-label {
     display: block;
@@ -898,8 +920,12 @@ textarea:focus {
     margin: 0;
 }
 
-.accounts-summary-value.success { color: var(--success); }
-.accounts-summary-value.muted   { color: var(--text-secondary); }
+.accounts-summary-value.success {
+    color: var(--success);
+}
+.accounts-summary-value.muted {
+    color: var(--text-secondary);
+}
 
 .accounts-grid {
     display: grid;
@@ -923,7 +949,7 @@ textarea:focus {
 .account-card:hover {
     border-color: var(--primary);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(99,102,241,0.12);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12);
 }
 
 .account-card.account-inactive {
@@ -936,12 +962,24 @@ textarea:focus {
     border-radius: 14px 14px 0 0;
 }
 
-.accent-indigo  { background: linear-gradient(90deg, #6366f1, #818cf8); }
-.accent-emerald { background: linear-gradient(90deg, #10b981, #34d399); }
-.accent-rose    { background: linear-gradient(90deg, #ef4444, #f87171); }
-.accent-amber   { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-.accent-sky     { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
-.accent-violet  { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+.accent-indigo {
+    background: linear-gradient(90deg, #6366f1, #818cf8);
+}
+.accent-emerald {
+    background: linear-gradient(90deg, #10b981, #34d399);
+}
+.accent-rose {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+}
+.accent-amber {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+.accent-sky {
+    background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+}
+.accent-violet {
+    background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+}
 
 .account-card-header {
     display: flex;
@@ -961,12 +999,30 @@ textarea:focus {
     flex-shrink: 0;
 }
 
-.icon-indigo  { background: rgba(99,102,241,0.15); color: #818cf8; }
-.icon-emerald { background: rgba(16,185,129,0.15); color: #34d399; }
-.icon-rose    { background: rgba(239,68,68,0.15);  color: #f87171; }
-.icon-amber   { background: rgba(245,158,11,0.15); color: #fbbf24; }
-.icon-sky     { background: rgba(14,165,233,0.15); color: #38bdf8; }
-.icon-violet  { background: rgba(139,92,246,0.15); color: #a78bfa; }
+.icon-indigo {
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+}
+.icon-emerald {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+}
+.icon-rose {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}
+.icon-amber {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+}
+.icon-sky {
+    background: rgba(14, 165, 233, 0.15);
+    color: #38bdf8;
+}
+.icon-violet {
+    background: rgba(139, 92, 246, 0.15);
+    color: #a78bfa;
+}
 
 .account-card-name {
     flex: 1;
@@ -994,8 +1050,14 @@ textarea:focus {
     letter-spacing: 0.4px;
 }
 
-.badge-active   { background: rgba(16,185,129,0.15); color: var(--success); }
-.badge-inactive { background: rgba(148,163,184,0.12); color: var(--text-secondary); }
+.badge-active {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+.badge-inactive {
+    background: rgba(148, 163, 184, 0.12);
+    color: var(--text-secondary);
+}
 
 .account-card-balance {
     background: var(--glass-bg);
@@ -1022,9 +1084,15 @@ textarea:focus {
     text-overflow: ellipsis;
 }
 
-.account-card-balance-value.positive { color: var(--success); }
-.account-card-balance-value.negative { color: var(--danger); }
-.account-card-balance-value.zero     { color: var(--text-secondary); }
+.account-card-balance-value.positive {
+    color: var(--success);
+}
+.account-card-balance-value.negative {
+    color: var(--danger);
+}
+.account-card-balance-value.zero {
+    color: var(--text-secondary);
+}
 
 .account-card-stats {
     display: flex;
@@ -1061,8 +1129,12 @@ textarea:focus {
     text-overflow: ellipsis;
 }
 
-.account-stat-value.income-color { color: var(--success); }
-.account-stat-value.expense-color { color: var(--danger); }
+.account-stat-value.income-color {
+    color: var(--success);
+}
+.account-stat-value.expense-color {
+    color: var(--danger);
+}
 
 .account-card-actions {
     display: flex;
@@ -1085,25 +1157,25 @@ textarea:focus {
     gap: 0.75rem;
 }
 
-.empty-state > i { 
-    font-size: 4rem; 
-    color: var(--primary); 
-    opacity: 0.25; 
+.empty-state > i {
+    font-size: 4rem;
+    color: var(--primary);
+    opacity: 0.25;
 }
 
-.empty-state h3 { 
-    font-size: 1.25rem; 
-    color: var(--text-primary); 
-    margin: 0; 
+.empty-state h3 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin: 0;
 }
 
-.empty-state p { 
-    font-size: 0.9rem; 
-    margin: 0; 
+.empty-state p {
+    font-size: 0.9rem;
+    margin: 0;
 }
 
-.empty-state .btn-primary { 
-    margin-top: 0.75rem; 
+.empty-state .btn-primary {
+    margin-top: 0.75rem;
 }
 
 /* ==========================================================================
@@ -1120,7 +1192,9 @@ textarea:focus {
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    transition: opacity 0.8s ease, visibility 0.8s;
+    transition:
+        opacity 0.8s ease,
+        visibility 0.8s;
 }
 
 .splash-content {
@@ -1157,7 +1231,7 @@ textarea:focus {
 }
 
 .splash-loader::after {
-    content: '';  
+    content: "";
     box-sizing: border-box;
     position: absolute;
     left: 0;
@@ -1305,33 +1379,34 @@ textarea:focus {
 }
 
 @keyframes pulse {
-    0%, 100% { 
-        transform: scale(1); 
-        filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.2)); 
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.2));
     }
-    50% { 
-        transform: scale(1.1); 
-        filter: drop-shadow(0 0 25px rgba(99, 102, 241, 0.5)); 
+    50% {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 25px rgba(99, 102, 241, 0.5));
     }
 }
 
 @keyframes rotation {
-    0% { 
-        transform: rotate(0deg); 
+    0% {
+        transform: rotate(0deg);
     }
-    100% { 
-        transform: rotate(360deg); 
+    100% {
+        transform: rotate(360deg);
     }
 }
 
 @keyframes fadeInUp {
-    from { 
-        opacity: 0; 
-        transform: translateY(20px); 
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
-    to { 
-        opacity: 1; 
-        transform: translateY(0); 
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -1350,8 +1425,8 @@ textarea:focus {
     }
 
     /* 2. Reseta a estrutura da página para ocupar a folha inteira */
-    body, 
-    .app-container, 
+    body,
+    .app-container,
     .main-content {
         background: white !important;
         color: black !important;
@@ -1373,6 +1448,7 @@ textarea:focus {
         backdrop-filter: none !important;
         padding: 0 !important;
         box-shadow: none !important;
+        padding: 2rem !important;
     }
 
     /* 4. Ajuste da Tabela para impressão clara */
@@ -1382,7 +1458,8 @@ textarea:focus {
         margin-top: 1rem !important;
     }
 
-    th, td {
+    th,
+    td {
         border: 1px solid #ddd !important;
         color: black !important;
         padding: 8px !important;
@@ -1396,7 +1473,7 @@ textarea:focus {
         margin-bottom: 1rem !important;
     }
 
-    .filter-select, 
+    .filter-select,
     input[type="date"] {
         border: 1px solid #ccc !important;
         background: white !important;
@@ -1421,7 +1498,8 @@ textarea:focus {
         padding: 1rem !important;
     }
 
-    .calc-label, .calc-value {
+    .calc-label,
+    .calc-value {
         color: black !important;
     }
 
@@ -1439,4 +1517,131 @@ textarea:focus {
 /* Oculta o cabeçalho de emissão na tela normal */
 .print-only-header {
     display: none;
+}
+
+/* Correção do Layout da Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex: none;
+}
+
+.dashboard-grid.secondary-grid {
+    grid-template-columns: 1fr 1fr;
+}
+
+.chart-container {
+    position: relative;
+    min-height: 320px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-body {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    min-height: 250px;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilização do Banner de Insight / Alerta */
+.budget-alert-banner {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    border-left: 5px solid var(--primary);
+    transition: var(--transition);
+}
+
+/* Níveis do Alerta */
+.budget-alert-banner.alert-safe {
+    border-left-color: var(--success);
+    background: linear-gradient(
+        90deg,
+        rgba(16, 185, 129, 0.1) 0%,
+        rgba(255, 255, 255, 0.02) 100%
+    );
+}
+
+.budget-alert-banner.alert-warning {
+    border-left-color: var(--warning);
+    background: linear-gradient(
+        90deg,
+        rgba(245, 158, 11, 0.1) 0%,
+        rgba(255, 255, 255, 0.02) 100%
+    );
+}
+
+.budget-alert-banner.alert-danger {
+    border-left-color: var(--danger);
+    background: linear-gradient(
+        90deg,
+        rgba(239, 68, 68, 0.1) 0%,
+        rgba(255, 255, 255, 0.02) 100%
+    );
+}
+
+.alert-banner-icon {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.alert-safe .alert-banner-icon {
+    color: var(--success);
+}
+.alert-warning .alert-banner-icon {
+    color: var(--warning);
+}
+.alert-danger .alert-banner-icon {
+    color: var(--danger);
+}
+
+.alert-banner-content {
+    flex: 1;
+}
+
+.alert-banner-content h4 {
+    margin: 0 0 0.2rem 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.alert-banner-content p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+}
+
+.alert-banner-stat {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.alert-banner-stat strong {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid,
+    .dashboard-grid.secondary-grid {
+        grid-template-columns: 1fr;
+    }
 }

@@ -1,81 +1,162 @@
 <!-- Dashboard Section -->
 <section id="dashboard" class="content-section active">
+    <!-- Cabeçalho de Impressão Exclusivo -->
+    <div class="print-only-header">
+        <strong>Relatório Consolidado - Dashboard Financeira</strong> — Emitido em: <span id="dashboardPrintDate"></span>
+    </div>
+
     <header class="section-header">
         <div class="header-main">
             <h1>Dashboard</h1>
+            
+            <!-- Barra de Filtros -->
             <div class="dashboard-filters">
                 <select id="dashboardAccountFilter" class="filter-select">
-                    <option value="all">Todas as Contas</option>
+                    <option value="all">Todas as Contas (Ativas)</option>
                 </select>
+
+                <div class="date-range-filter">
+                    <input type="date" id="dashStartDate" class="filter-select" />
+                    <span>até</span>
+                    <input type="date" id="dashEndDate" class="filter-select" />
+                </div>
+
+                <button class="btn-secondary" id="dashFilterBtn">
+                    <i class="ph ph-funnel"></i> Filtrar
+                </button>
             </div>
         </div>
-        <div class="date-display" id="currentDate">Carregando...</div>
+
+        <div class="header-actions">
+            <button class="btn-secondary" id="printDashboardBtn" title="Imprimir Relatório">
+                <i class="ph ph-printer"></i> Imprimir
+            </button>
+            <div class="date-display" id="currentDate">Agosto de 2026</div>
+        </div>
     </header>
 
+    <!-- Cards de Resumo Principais -->
     <div class="summary-cards">
         <div class="card glass">
             <div class="card-icon income"><i class="ph ph-arrow-up"></i></div>
             <div class="card-info">
                 <span class="card-label">Receita Total</span>
-                <h2 id="totalIncome">R$ 0,00</h2>
+                <h2 id="totalIncome" class="success">R$ 0,00</h2>
             </div>
         </div>
         <div class="card glass">
             <div class="card-icon expense"><i class="ph ph-arrow-down"></i></div>
             <div class="card-info">
                 <span class="card-label">Despesa Total</span>
-                <h2 id="totalExpense">R$ 0,00</h2>
+                <h2 id="totalExpense" class="danger">R$ 0,00</h2>
             </div>
         </div>
         <div class="card glass">
             <div class="card-icon investment"><i class="ph ph-piggy-bank"></i></div>
             <div class="card-info">
                 <span class="card-label">Total Investido</span>
-                <h2 id="totalInvestment">R$ 0,00</h2>
+                <h2 id="totalInvestment" class="info">R$ 0,00</h2>
             </div>
         </div>
         <div class="card glass">
             <div class="card-icon balance"><i class="ph ph-scales"></i></div>
             <div class="card-info">
-                <span class="card-label">Saldo</span>
+                <span class="card-label">Saldo Líquido</span>
                 <h2 id="totalBalance">R$ 0,00</h2>
             </div>
         </div>
     </div>
 
+    <!-- Novo Banner Dinâmico de Insight / Alerta de Orçamento -->
+    <div id="budgetInsightBanner" class="budget-alert-banner glass">
+        <div class="alert-banner-icon" id="alertBannerIcon">
+            <i class="ph ph-sparkle"></i>
+        </div>
+        <div class="alert-banner-content">
+            <h4 id="alertBannerTitle">Analisando orçamentos...</h4>
+            <p id="alertBannerMessage">Carregando informações do período selecionado.</p>
+        </div>
+        <div class="alert-banner-stat">
+            <span>Comprometimento:</span>
+            <strong id="alertBannerPercent">0%</strong>
+        </div>
+    </div>
+
+    <!-- Grid Principal: Gráfico de Evolução x Regra 50-15-35 -->
     <div class="dashboard-grid">
         <div class="chart-container glass">
-            <h3>Evolução 6 Meses</h3>
-            <canvas id="mainChart"></canvas>
+            <div class="chart-header">
+                <h3>Evolução Financeira (Últimos 6 Meses)</h3>
+            </div>
+            <div class="chart-body">
+                <canvas id="mainChart"></canvas>
+            </div>
         </div>
+
+        <!-- Regra 50/15/35 com Comparativo Real vs Meta -->
         <div class="rule-container glass">
-            <h3>Regra 50-15-35</h3>
-            <div class="progress-group">
-                <div class="progress-info">
-                    <span>Essenciais (50%)</span>
-                    <span id="essentialsPercent">0%</span>
-                </div>
-                <div class="progress-bar">
-                    <div id="essentialsBar" class="progress-fill primary" style="width: 0%"></div>
-                </div>
+            <div class="rule-header">
+                <h3>Regra 50 / 15 / 35</h3>
+                <small>Proporção das Receitas</small>
             </div>
-            <div class="progress-group">
+
+            <div class="rule-card">
                 <div class="progress-info">
-                    <span>Investimentos (15%)</span>
-                    <span id="prioritiesPercent">0%</span>
+                    <span><i class="ph ph-house"></i> Despesas Necessárias (Meta: 50%)</span>
+                    <strong id="essentialsVal">0% (R$ 0,00)</strong>
                 </div>
                 <div class="progress-bar">
-                    <div id="prioritiesBar" class="progress-fill success" style="width: 0%"></div>
+                    <div id="essentialsBar" class="progress-fill primary"></div>
                 </div>
+                <small id="essentialsStatus" class="rule-status">Calculando...</small>
             </div>
-            <div class="progress-group">
+
+            <div class="rule-card">
                 <div class="progress-info">
-                    <span>Estilo de Vida (35%)</span>
-                    <span id="lifestylePercent">0%</span>
+                    <span><i class="ph ph-confetti"></i> Despesas Eventuais (Meta: 35%)</span>
+                    <strong id="lifestyleVal">0% (R$ 0,00)</strong>
                 </div>
                 <div class="progress-bar">
-                    <div id="lifestyleBar" class="progress-fill warning" style="width: 0%"></div>
+                    <div id="lifestyleBar" class="progress-fill warning"></div>
                 </div>
+                <small id="lifestyleStatus" class="rule-status">Calculando...</small>
+            </div>
+
+            <div class="rule-card">
+                <div class="progress-info">
+                    <span><i class="ph ph-chart-line-up"></i> Investimentos (Meta: 15%)</span>
+                    <strong id="prioritiesVal">0% (R$ 0,00)</strong>
+                </div>
+                <div class="progress-bar">
+                    <div id="prioritiesBar" class="progress-fill success"></div>
+                </div>
+                <small id="prioritiesStatus" class="rule-status">Calculando...</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid Secundária: Gráficos Complementares -->
+    <div class="dashboard-grid secondary-grid">
+        <!-- Gráfico 1: Proporção Receita vs Gastos -->
+        <div class="chart-container glass">
+            <div class="chart-header">
+                <h3>Proporção: Receitas x Despesas</h3>
+            </div>
+            <div class="chart-body flex-center">
+                <canvas id="incomeVsExpenseChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Gráfico 2: Top 5 Subcategorias por Categoria -->
+        <div class="chart-container glass">
+            <div class="chart-header">
+                <h3>Top 5 Subcategorias Mais Custosas</h3>
+                <select id="dashCategorySelect" class="filter-select-sm">
+                    <!-- Opções dinâmicas injetadas via JavaScript -->
+                </select>
+            </div>
+            <div class="chart-body">
+                <canvas id="topSubcategoriesChart"></canvas>
             </div>
         </div>
     </div>
